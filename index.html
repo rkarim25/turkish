@@ -1934,19 +1934,29 @@ function updateOffStatus() {
 }
 async function ensureOffline() {
   if (!("caches" in window)) return;
-  try { await (navigator.serviceWorker && navigator.serviceWorker.ready); } catch (e) {}
+  // stay out of the way: let the page paint, and let the SW's install precache
+  // do the heavy first-visit downloading — we only verify and top up after
+  await new Promise(r => setTimeout(r, 2500));
   const files = offlineFileList();
   OFF.total = files.length; OFF.checked = 0; OFF.failed = 0; OFF.done = false;
+  updateOffStatus();
+  try { if (navigator.serviceWorker) await navigator.serviceWorker.ready; } catch (e) {}
+  // pass 1: pure cache check — fast, zero network
+  const missing = [];
   for (const f of files) {
     try {
       const hit = await caches.match(new URL(f, location.href).href, { ignoreSearch: true });
-      if (!hit) {
-        const r = await fetch(f); // the service worker caches every OK response
-        if (!r.ok) OFF.failed++;
-      }
-    } catch (e) { OFF.failed++; }
-    OFF.checked++;
-    if (OFF.checked % 10 === 0) updateOffStatus();
+      if (hit) OFF.checked++; else missing.push(f);
+    } catch (e) { missing.push(f); }
+  }
+  updateOffStatus();
+  // pass 2: fetch only the gaps, four at a time — never a download storm
+  for (let i = 0; i < missing.length; i += 4) {
+    await Promise.all(missing.slice(i, i + 4).map(f =>
+      fetch(f).then(r => { if (!r.ok) OFF.failed++; }).catch(() => { OFF.failed++; })
+    ));
+    OFF.checked += Math.min(4, missing.length - i);
+    updateOffStatus();
   }
   OFF.done = true;
   updateOffStatus();
