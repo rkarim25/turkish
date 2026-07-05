@@ -1,0 +1,14 @@
+{
+  "name": "Türkçe — 2-hour work-trip Turkish",
+  "short_name": "Türkçe",
+  "description": "The most effective 2 hours of Turkish for a work trip, plus a 10-minute refresh. Works offline.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#faf7f2",
+  "theme_color": "#e30a17",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

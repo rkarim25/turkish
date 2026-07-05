@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#e30a17">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>Türkçe — 2-hour work-trip Turkish</title>
+<style>
+  :root {
+    --red: #e30a17; --red-soft: #fdeaea; --ink: #26211c; --muted: #7a726a;
+    --bg: #faf7f2; --card: #ffffff; --border: #e7dfd5; --green: #0d7a5f; --green-soft: #e3f2ec;
+    --amber: #b3730d; --radius: 14px; --shadow: 0 1px 3px rgba(40,30,20,.08);
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+         background: var(--bg); color: var(--ink); line-height: 1.55; font-size: 16px; }
+  main { max-width: 760px; margin: 0 auto; padding: 18px 16px 60px; }
+  h1 { font-size: 26px; margin: 10px 0 6px; }
+  h2 { font-size: 18px; margin: 0 0 10px; }
+  .sub { color: var(--muted); font-size: 14.5px; margin-bottom: 16px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+          box-shadow: var(--shadow); padding: 16px; margin-bottom: 14px; }
+  button { font: inherit; cursor: pointer; border: 1px solid var(--border); background: #fff;
+           border-radius: 10px; padding: 8px 14px; color: var(--ink); }
+  button.primary { background: var(--red); border-color: var(--red); color: #fff; font-weight: 600; }
+  button.small { font-size: 13px; padding: 4px 10px; }
+  button:disabled { opacity: .5; cursor: default; }
+  a { color: var(--red); }
+  .top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .crumb { font-size: 14px; text-decoration: none; }
+  table { width: 100%; border-collapse: collapse; }
+  td, th { padding: 9px 8px; border-bottom: 1px solid var(--border); vertical-align: top; text-align: left; }
+  th { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  .tr-cell { font-weight: 700; font-size: 18px; white-space: normal; }
+  .say { color: var(--amber); font-size: 13.5px; font-style: italic; }
+  .en-cell { font-size: 15px; }
+  .note { color: var(--muted); font-size: 13px; display: block; margin-top: 2px; }
+  .veiled > span { visibility: hidden; }
+  .veiled { background: #f3ede4; border-radius: 8px; cursor: pointer; }
+  .rowbtn { border-color: var(--red); color: var(--red); }
+  .rowbtn.on { background: var(--red-soft); font-weight: 700; }
+  .mod { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--border);
+         border-radius: var(--radius); background: var(--card); margin-bottom: 8px; text-decoration: none;
+         color: var(--ink); box-shadow: var(--shadow); }
+  .mod:hover { border-color: var(--red); }
+  .mod .ico { font-size: 24px; width: 34px; text-align: center; }
+  .mod .t { font-weight: 600; }
+  .mod .m { color: var(--muted); font-size: 13px; }
+  .mod .done { margin-left: auto; color: var(--green); font-weight: 700; white-space: nowrap; }
+  .mod .togo { margin-left: auto; color: var(--muted); font-size: 13px; white-space: nowrap; }
+  .bar { height: 8px; background: #eee4d6; border-radius: 999px; overflow: hidden; margin: 8px 0 4px; }
+  .bar > div { height: 100%; background: var(--red); border-radius: 999px; transition: width .3s; }
+  .pill { display: inline-block; background: var(--green-soft); color: var(--green); border-radius: 999px;
+          padding: 2px 10px; font-size: 12.5px; font-weight: 600; }
+  .exrow { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; align-items: center; }
+  .mcq { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }
+  .mcq button { text-align: left; padding: 10px 14px; }
+  .mcq button.ok { border-color: var(--green); background: var(--green-soft); }
+  .mcq button.no { border-color: var(--red); background: var(--red-soft); }
+  .big { font-size: 22px; font-weight: 700; }
+  input.filter { width: 100%; font: inherit; padding: 9px 12px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; }
+  .tag { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+  @media (max-width: 520px) { td, th { padding: 8px 5px; } .tr-cell { font-size: 16.5px; } }
+</style>
+</head>
+<body>
+<main id="app">Loading…</main>
+<script>
+/* ============================================================
+   Türkçe in 2 hours — a work-trip course.
+   Design rules (same as the Arabic site): tables not flashcards,
+   recall-then-reveal, mark only misses, honest progress, offline.
+   ============================================================ */
+
+const MODULES = [
+{ id:"sounds", ico:"🔤", title:"Read Turkish in 8 minutes", min:8,
+  intro:"Turkish is 100% phonetic — every letter always makes the same sound, so 8 minutes here unlocks every sign, menu and name in the country. Stress almost always falls on the LAST syllable. These are the only letters that differ from English:",
+  items:[
+   {tr:"c", en:"sounds like J in “jam”", say:"cadde (street) = JAD-deh", note:"the biggest trap — Turkish c is never like English c"},
+   {tr:"ç", en:"sounds like CH in “chat”", say:"çay (tea) = chai"},
+   {tr:"ş", en:"sounds like SH in “shop”", say:"şeker (sugar) = sheh-KER"},
+   {tr:"ğ", en:"silent — just stretches the vowel before it", say:"dağ (mountain) = daa"},
+   {tr:"ı", en:"dotless i — “uh”, like the a in “about”", say:"kapı (door) = kah-PUH", note:"ı and i are different letters: sıcak (hot) = suh-JAHK"},
+   {tr:"i", en:"“ee”, like in “see”", say:"bir (one) = beer"},
+   {tr:"ö", en:"like the u in “fur” (German ö)", say:"dört (four) = durt"},
+   {tr:"ü", en:"“ew” with rounded lips (French u)", say:"üç (three) = ewch"},
+   {tr:"o / u / e / a", en:"always pure: o as in “more”, u as “oo”, e as “eh”, a as “ah”", say:"otel = oh-TEL"},
+   {tr:"j", en:"like the s in “measure” (rare)", say:"garaj = gah-RAZH"},
+  ]},
+{ id:"polite", ico:"🤝", title:"The politeness pack", min:15,
+  intro:"Turks are warm and formal at first meeting. These 15 phrases do 80% of your social work — say every one out loud.",
+  items:[
+   {tr:"Merhaba", en:"hello", say:"mer-hah-BAH"},
+   {tr:"Günaydın", en:"good morning", say:"gew-nigh-DUHN"},
+   {tr:"İyi günler", en:"good day (greeting or leaving a shop)", say:"ee GEWN-ler"},
+   {tr:"İyi akşamlar", en:"good evening", say:"ee ahk-sham-LAR"},
+   {tr:"Hoş geldiniz", en:"welcome (said to you)", say:"hosh GEL-di-niz", note:"the fixed reply is Hoş bulduk"},
+   {tr:"Hoş bulduk", en:"reply to “welcome”", say:"hosh bool-DOOK"},
+   {tr:"Evet / Hayır", en:"yes / no", say:"eh-VET / HAH-yuhr"},
+   {tr:"Tamam", en:"OK", say:"tah-MAHM"},
+   {tr:"Lütfen", en:"please", say:"LEWT-fen"},
+   {tr:"Teşekkür ederim", en:"thank you", say:"teh-shek-KEWR eh-deh-reem", note:"casual: Teşekkürler, or Sağ ol(un)"},
+   {tr:"Rica ederim", en:"you're welcome", say:"ree-JAH eh-deh-reem"},
+   {tr:"Pardon", en:"excuse me / sorry (bumping past)", say:"par-DON"},
+   {tr:"Özür dilerim", en:"I'm sorry (apology)", say:"uh-ZEWR dee-leh-reem"},
+   {tr:"Memnun oldum", en:"pleased to meet you", say:"mem-NOON ol-DOOM", note:"reply: Ben de (me too) = ben DEH"},
+   {tr:"Görüşürüz", en:"see you later", say:"gur-rew-shew-REWZ"},
+  ]},
+{ id:"survive", ico:"🛟", title:"Survival phrases", min:14,
+  intro:"The phrases that rescue every conversation that goes beyond your Turkish.",
+  items:[
+   {tr:"Türkçe bilmiyorum", en:"I don't speak Turkish", say:"TEWRK-cheh BIL-mee-yoh-room"},
+   {tr:"İngilizce biliyor musunuz?", en:"do you speak English?", say:"in-gee-LEEZ-jeh bee-lee-YOR moo-soo-nooz"},
+   {tr:"Anlamadım", en:"I didn't understand", say:"ahn-LAH-mah-duhm"},
+   {tr:"Yavaş, lütfen", en:"slowly, please", say:"yah-VAHSH LEWT-fen"},
+   {tr:"Tekrar söyler misiniz?", en:"could you say that again?", say:"tek-RAR suy-LER mee-see-neez"},
+   {tr:"… nerede?", en:"where is …?", say:"NEH-reh-deh", note:"Tuvalet nerede? = where is the toilet?"},
+   {tr:"Tuvalet nerede?", en:"where is the toilet?", say:"too-vah-LET NEH-reh-deh"},
+   {tr:"Yardım eder misiniz?", en:"could you help me?", say:"yar-DUHM eh-DER mee-see-neez"},
+   {tr:"Sorun değil", en:"no problem", say:"soh-ROON deh-EEL"},
+   {tr:"Bilmiyorum", en:"I don't know", say:"BIL-mee-yoh-room"},
+   {tr:"Bakar mısınız?", en:"excuse me! (calling waiter / staff)", say:"bah-KAR muh-suh-nuhz", note:"literally “would you look?” — THE way to get attention politely"},
+   {tr:"Buyurun", en:"“here you are / go ahead / how can I help?”", say:"BOO-yoo-roon", note:"you'll hear this constantly — it's an all-purpose “please, go ahead”"},
+  ]},
+{ id:"numbers", ico:"💸", title:"Numbers & money", min:16,
+  intro:"Ten numbers + four tens = every price in Turkey (they stack: yirmi beş = 25). Then the money phrases — including the receipt you need for expenses.",
+  items:[
+   {tr:"bir, iki, üç", en:"1, 2, 3", say:"beer, ee-KEE, ewch"},
+   {tr:"dört, beş, altı", en:"4, 5, 6", say:"durt, besh, ahl-TUH"},
+   {tr:"yedi, sekiz, dokuz", en:"7, 8, 9", say:"yeh-DEE, seh-KEEZ, doh-KOOZ"},
+   {tr:"on", en:"10", say:"ohn", note:"on bir = 11, on iki = 12…"},
+   {tr:"yirmi, otuz, kırk, elli", en:"20, 30, 40, 50", say:"yeer-MEE, oh-TOOZ, kuhrk, el-LEE", note:"yirmi beş = 25, kırk iki = 42"},
+   {tr:"yüz / bin", en:"100 / 1000", say:"yewz / been", note:"iki yüz elli = 250"},
+   {tr:"lira", en:"lira (₺)", say:"LEE-rah"},
+   {tr:"Ne kadar?", en:"how much?", say:"neh kah-DAR"},
+   {tr:"Kaç lira?", en:"how many lira?", say:"kach LEE-rah"},
+   {tr:"Hesap, lütfen", en:"the bill, please", say:"heh-SAHP LEWT-fen"},
+   {tr:"Kart geçer mi?", en:"do you take card?", say:"kart geh-CHER mee"},
+   {tr:"nakit", en:"cash", say:"nah-KEET"},
+   {tr:"Fatura alabilir miyim?", en:"can I get an invoice? (for expenses!)", say:"fah-too-RAH ah-lah-bee-LEER mee-yim", note:"fiş = simple receipt; fatura = proper invoice with tax number"},
+   {tr:"pahalı / ucuz", en:"expensive / cheap", say:"pah-hah-LUH / oo-JOOZ"},
+   {tr:"para üstü", en:"change (money back)", say:"pah-RAH ews-tew"},
+  ]},
+{ id:"taxi", ico:"🚕", title:"Taxi & getting around", min:14,
+  intro:"Istanbul taxis: make sure the meter (taksimetre) is running. Say the destination + lütfen and you're moving.",
+  items:[
+   {tr:"Nereye?", en:"“where to?” (what the driver asks you)", say:"NEH-reh-yeh"},
+   {tr:"[Taksim]'e lütfen", en:"to [Taksim], please", say:"tahk-SEE-meh LEWT-fen", note:"place name + -e/-a = “to” — [Otel]e lütfen works everywhere"},
+   {tr:"havalimanı", en:"airport", say:"hah-vah-lee-mah-NUH"},
+   {tr:"otel", en:"hotel", say:"oh-TEL"},
+   {tr:"sağ / sol", en:"right / left", say:"saa / sohl"},
+   {tr:"düz", en:"straight ahead", say:"dewz", note:"düz gidin = go straight"},
+   {tr:"Burada durun, lütfen", en:"stop here, please", say:"boo-RAH-dah doo-ROON"},
+   {tr:"Ne kadar sürer?", en:"how long does it take?", say:"neh kah-DAR sew-RER"},
+   {tr:"uzak / yakın", en:"far / near", say:"oo-ZAHK / yah-KUHN"},
+   {tr:"metro / otobüs / tramvay", en:"metro / bus / tram", say:"met-ROH / oh-toh-BEWS / trahm-VIGH", note:"in Istanbul buy an İstanbulkart — one card for all of them"},
+   {tr:"durak", en:"(bus/tram) stop", say:"doo-RAHK"},
+   {tr:"Taksimetre açık mı?", en:"is the meter on?", say:"tahk-see-MET-reh ah-CHUHK muh"},
+  ]},
+{ id:"hotel", ico:"🏨", title:"Hotel", min:12,
+  intro:"Check-in to check-out in ten phrases. “Rezervasyonum var” uses the magic word var (there is) — module 9 makes it click.",
+  items:[
+   {tr:"Rezervasyonum var", en:"I have a reservation", say:"reh-zer-vahs-YOH-noom VAR"},
+   {tr:"oda", en:"room", say:"oh-DAH"},
+   {tr:"anahtar", en:"key", say:"ah-nah-TAR"},
+   {tr:"Kahvaltı saat kaçta?", en:"what time is breakfast?", say:"kah-vahl-TUH saht kach-TAH"},
+   {tr:"Wi-Fi şifresi ne?", en:"what's the Wi-Fi password?", say:"wifi shif-reh-SEE neh"},
+   {tr:"Çıkış saat kaçta?", en:"what time is checkout?", say:"chuh-KUHSH saht kach-TAH"},
+   {tr:"klima", en:"air conditioning", say:"KLEE-mah"},
+   {tr:"asansör", en:"elevator", say:"ah-sahn-SUR"},
+   {tr:"Fatura, lütfen", en:"the invoice, please (checkout — expenses!)", say:"fah-too-RAH LEWT-fen"},
+   {tr:"Saat kaç?", en:"what time is it?", say:"saht KACH", note:"saat kaç = what time IS it; saat kaçta = AT what time"},
+  ]},
+{ id:"food", ico:"🍢", title:"Eating & tea culture", min:15,
+  intro:"Food is half the trip. Rule one: when offered çay, accept it — refusing tea is refusing friendship. Rule two: you'll hear “Afiyet olsun” at every meal.",
+  items:[
+   {tr:"Afiyet olsun", en:"bon appétit (said to you — reply: teşekkürler)", say:"ah-fee-YET ol-SOON"},
+   {tr:"Elinize sağlık", en:"“health to your hands” — compliment the cook", say:"eh-lee-nee-ZEH saa-LUHK", note:"say this after a good meal and watch the smile"},
+   {tr:"menü", en:"menu", say:"meh-NEW"},
+   {tr:"su / maden suyu", en:"water / sparkling water", say:"soo / mah-DEN soo-yoo"},
+   {tr:"çay", en:"tea (the national drink)", say:"chai", note:"served in tulip glasses, no milk, endless refills"},
+   {tr:"kahve / Türk kahvesi", en:"coffee / Turkish coffee", say:"kah-VEH / tewrk kah-veh-SEE"},
+   {tr:"Bir çay, lütfen", en:"one tea, please", say:"beer chai LEWT-fen"},
+   {tr:"et / tavuk / balık", en:"meat / chicken / fish", say:"et / tah-VOOK / bah-LUHK"},
+   {tr:"acı", en:"spicy", say:"ah-JUH", note:"acısız = not spicy (-sız/-siz = without)"},
+   {tr:"şekersiz", en:"without sugar", say:"sheh-ker-SEEZ", note:"-siz works everywhere: etsiz = meatless, buzsuz = no ice"},
+   {tr:"Alerjim var", en:"I have an allergy", say:"ah-ler-ZHEEM var", note:"fıstık alerjim var = I have a nut allergy"},
+   {tr:"Çok lezzetli", en:"very delicious", say:"chok lez-zet-LEE"},
+   {tr:"kahvaltı", en:"breakfast (a Turkish institution)", say:"kah-vahl-TUH"},
+   {tr:"Şerefe!", en:"cheers!", say:"sheh-reh-FEH"},
+  ]},
+{ id:"work", ico:"💼", title:"Business small talk & etiquette", min:15,
+  intro:"Address people as FirstName + Bey (men) or Hanım (women): Ahmet Bey, Ayşe Hanım — using it instantly marks you as someone who did their homework. Meetings start with tea and small talk; let your host set the pace.",
+  items:[
+   {tr:"Nasılsınız?", en:"how are you? (formal)", say:"nah-suhl-suh-NUHZ"},
+   {tr:"İyiyim, teşekkürler. Siz?", en:"I'm fine, thanks. And you?", say:"ee-YEE-yim teh-shek-kewr-LER. seez"},
+   {tr:"Ahmet Bey / Ayşe Hanım", en:"Mr Ahmet / Ms Ayşe (first name + title!)", say:"bey / hah-NUHM", note:"never surname + Bey — it's always the FIRST name"},
+   {tr:"toplantı", en:"meeting", say:"top-lahn-TUH"},
+   {tr:"bugün / yarın / şimdi", en:"today / tomorrow / now", say:"boo-GEWN / YAH-ruhn / SHIM-dee"},
+   {tr:"Saat kaçta?", en:"at what time?", say:"saht kach-TAH"},
+   {tr:"İyi çalışmalar", en:"“good work!” (leaving an office or shop)", say:"ee chah-luhsh-mah-LAR", note:"say it when leaving any workplace — universally appreciated"},
+   {tr:"Kolay gelsin", en:"“may it come easy” — to anyone working", say:"koh-LIGH GEL-sin", note:"the golden phrase: say it to taxi drivers, cleaners, clerks…"},
+   {tr:"İnşallah", en:"hopefully / God willing", say:"in-shal-LAH", note:"used constantly in Turkish, same as Arabic"},
+   {tr:"Maşallah", en:"“wonderful!” (admiration)", say:"mah-shal-LAH"},
+   {tr:"Elbette", en:"of course", say:"el-BET-teh"},
+   {tr:"Çok memnun oldum", en:"it was a great pleasure (leaving)", say:"chok mem-NOON ol-DOOM"},
+  ]},
+{ id:"magic", ico:"🪄", title:"5 magic patterns", min:11,
+  intro:"Turkish grammar for travelers in five moves. No gender, no articles, no verb tables — these patterns + pointing at things = functional Turkish.",
+  items:[
+   {tr:"var / yok", en:"there is / there isn't (the most useful pair in Turkish)", say:"var / yohk", note:"Çay var mı? — Var. / Yok.  Also possession: Rezervasyonum var."},
+   {tr:"… mı? / mi?", en:"turns anything into a question", say:"muh / mee", note:"Taksi mi? = is this a taxi? Açık mı? = is it open?"},
+   {tr:"[X] istiyorum", en:"I want [X] — point at anything and say it", say:"is-tee-YOH-room", note:"Su istiyorum. Bunu istiyorum = I want this one."},
+   {tr:"İstemiyorum", en:"I don't want (it)", say:"IS-teh-mee-yoh-room", note:"polite firm no to street sellers"},
+   {tr:"[X] nerede?", en:"where is [X]?", say:"NEH-reh-deh"},
+   {tr:"-de / -da", en:"in / at: otelde = at the hotel", say:"oteldeh", note:"havalimanında = at the airport"},
+   {tr:"-siz / -sız", en:"without: şekersiz, etsiz, buzsuz", say:"-seez", note:"your allergy/diet insurance"},
+   {tr:"bu / şu", en:"this / that (point and win)", say:"boo / shoo", note:"Bu ne? = what's this? Bunu istiyorum = I want this one."},
+  ]},
+];
+
+/* ---------- storage ---------- */
+const store = {
+  get(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v === null || v === undefined ? d : v; } catch (e) { return d; } },
+  set(k, v) { localStorage.setItem(k, JSON.stringify(v)); },
+};
+const doneMods = () => store.get("tk-done", {});
+const cards = () => store.get("tk-cards", {});
+function markCard(key, missed) {
+  const c = store.get("tk-cards", {});
+  const e = c[key] || { miss: 0, seen: 0, reps: 0 };
+  if (missed) e.miss++; else e.miss = Math.max(0, e.miss - 1);
+  e.seen = Date.now(); e.reps++;
+  c[key] = e;
+  store.set("tk-cards", c);
+}
+function allItems(onlyDone) {
+  const out = [];
+  MODULES.forEach(m => {
+    if (onlyDone && !doneMods()[m.id]) return;
+    m.items.forEach((it, i) => out.push({ key: m.id + ":" + i, mod: m, it }));
+  });
+  return out;
+}
+
+/* ---------- TTS (bonus when a Turkish voice exists; site never depends on it) ---------- */
+let _trVoice = null;
+function loadVoices() {
+  const vs = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+  _trVoice = vs.find(v => v.lang && v.lang.toLowerCase().startsWith("tr")) || null;
+}
+if (window.speechSynthesis) { speechSynthesis.onvoiceschanged = loadVoices; loadVoices(); }
+function speak(t) {
+  if (!_trVoice) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(t.replace(/\[|\]/g, ""));
+  u.voice = _trVoice; u.lang = _trVoice.lang; u.rate = 0.85;
+  speechSynthesis.speak(u);
+}
+const spkBtn = t => _trVoice ? `<button class="small spk" data-t="${t.replace(/"/g, "&quot;")}">🔊</button>` : "";
+function wireSpk(root) {
+  root.querySelectorAll(".spk").forEach(b => b.onclick = e => { e.stopPropagation(); speak(b.dataset.t); });
+}
+
+/* ---------- routing ---------- */
+const app = document.getElementById("app");
+window.addEventListener("hashchange", render);
+function render() {
+  const h = location.hash.slice(1) || "home";
+  window.scrollTo({ top: 0 });
+  if (h === "home") return home();
+  if (h === "review") return review();
+  if (h === "final") return finalCheck();
+  if (h === "all") return cheatSheet();
+  const [kind, id] = h.split("/");
+  const m = MODULES.find(x => x.id === id);
+  if (kind === "m" && m) return study(m);
+  if (kind === "t" && m) return test(m);
+  home();
+}
+
+/* ---------- home ---------- */
+function home() {
+  const dm = doneMods();
+  const nDone = MODULES.filter(m => dm[m.id]).length;
+  const minLeft = MODULES.filter(m => !dm[m.id]).reduce((a, m) => a + m.min, 0);
+  const meta = store.get("tk-meta", {});
+  const next = MODULES.find(m => !dm[m.id]);
+  const c = cards();
+  const missCount = Object.values(c).filter(x => x.miss > 0).length;
+  app.innerHTML = `
+    <h1>Türkçe <span style="color:var(--red)">in 2 hours</span></h1>
+    <p class="sub">A work-trip course: 9 modules ≈ 2 hours, then a 10-minute refresh whenever you like.
+    Everything works offline once loaded — plane mode is fine. No sign-in; progress lives on this device.</p>
+    <div class="card">
+      <div class="top"><h2>${nDone === MODULES.length ? "🎉 Course complete" : "Your course"}</h2>
+        <span class="tag">${nDone}/${MODULES.length} modules · ${minLeft ? "≈" + minLeft + " min left" : "0 min left"}</span></div>
+      <div class="bar"><div style="width:${Math.round(nDone / MODULES.length * 100)}%"></div></div>
+      ${next ? `<div class="exrow"><a href="#m/${next.id}"><button class="primary">▶ ${nDone ? "Continue" : "Start"}: ${next.title} (${next.min} min)</button></a></div>` : `
+      <div class="exrow">
+        <a href="#review"><button class="primary">🔁 10-minute refresh${missCount ? ` (${missCount} weak)` : ""}</button></a>
+        <a href="#final"><button>${meta.pass ? "🏅 Trip-ready — retake final check" : "🎓 Final check (12 questions)"}</button></a>
+      </div>
+      ${meta.pass ? `<p style="font-size:13px;color:var(--green);font-weight:600;margin-top:8px">🏅 Certified trip-ready — ${meta.pass.score}/12 on ${meta.pass.date}. Do the refresh before you land.</p>` : ""}`}
+    </div>
+    ${MODULES.map((m, i) => `
+      <a class="mod" href="#m/${m.id}">
+        <span class="ico">${m.ico}</span>
+        <span><span class="t">${i + 1}. ${m.title}</span><br><span class="m">${m.items.length} items · ${m.min} min</span></span>
+        ${dm[m.id] ? `<span class="done">✓</span>` : `<span class="togo">${m.min} min</span>`}
+      </a>`).join("")}
+    <div class="card" style="margin-top:14px">
+      <div class="top"><h2>🔁 10-minute refresh</h2>${nDone ? "" : `<span class="tag">unlocks after your first module</span>`}</div>
+      <p class="sub" style="margin:0 0 8px">Re-tests what you've learnt, misses first. Do it once a day until the trip, once on the plane, and once in the hotel — that's the whole maintenance plan.</p>
+      ${nDone ? `<a href="#review"><button class="primary">Start refresh</button></a>` : ""}
+    </div>
+    <a class="mod" href="#all"><span class="ico">📋</span><span><span class="t">Cheat sheet</span><br>
+      <span class="m">every phrase in one searchable table — for use in Turkey</span></span></a>
+    <p class="sub" style="margin-top:16px">💡 Tip: open this page once while online and it installs itself for offline use ("Add to Home Screen" makes it an app). ${_trVoice ? "🔊 buttons use this device's Turkish voice." : "This device has no Turkish voice, so audio buttons are hidden — the pronunciation column has you covered."}</p>
+  `;
+}
+
+/* ---------- study ---------- */
+function study(m) {
+  const i = MODULES.indexOf(m);
+  app.innerHTML = `
+    <div class="top"><a class="crumb" href="#home">← All modules</a><span class="tag">module ${i + 1} of ${MODULES.length} · ${m.min} min</span></div>
+    <h1>${m.ico} ${m.title}</h1>
+    <p class="sub">${m.intro}</p>
+    <div class="card">
+      <table><thead><tr><th>Turkish</th><th>say it</th><th>meaning</th></tr></thead><tbody>
+      ${m.items.map(it => `<tr>
+        <td class="tr-cell">${it.tr} ${spkBtn(it.tr)}</td>
+        <td class="say">${it.say || ""}</td>
+        <td class="en-cell">${it.en}${it.note ? `<span class="note">${it.note}</span>` : ""}</td>
+      </tr>`).join("")}
+      </tbody></table>
+      <div class="exrow">
+        <a href="#t/${m.id}"><button class="primary">I've read them aloud — test me →</button></a>
+      </div>
+    </div>
+  `;
+  wireSpk(app);
+}
+
+/* ---------- module test: recall-then-reveal, mark only misses ---------- */
+function test(m) {
+  const order = m.items.map((x, i) => i).sort(() => 0.5 - Math.random());
+  app.innerHTML = `
+    <div class="top"><a class="crumb" href="#m/${m.id}">← Back to the table</a></div>
+    <h1>${m.ico} ${m.title} — test</h1>
+    <p class="sub">Read the English, say the Turkish OUT LOUD from memory, then tap the row to check. Mark ✗ only what you missed.</p>
+    <div class="card">
+      <table><tbody id="tb">
+      ${order.map(i => { const it = m.items[i]; return `<tr data-i="${i}">
+        <td class="en-cell" style="width:45%">${it.en}</td>
+        <td class="veiled"><span><span class="tr-cell" style="font-size:16.5px">${it.tr}</span> <span class="say">${it.say || ""}</span></span></td>
+        <td style="width:60px"><button class="small rowbtn">✗</button></td>
+      </tr>`; }).join("")}
+      </tbody></table>
+      <div class="exrow">
+        <button class="small" id="revealAll">👁 Reveal all</button>
+        <button class="primary" id="finish">✓ Done — I only missed the marked ones</button>
+      </div>
+    </div>
+  `;
+  const tb = document.getElementById("tb");
+  const missed = new Set();
+  tb.querySelectorAll("tr").forEach(tr => {
+    const veil = tr.querySelector(".veiled");
+    tr.onclick = () => { veil.classList.remove("veiled"); if (_trVoice) speak(m.items[+tr.dataset.i].tr); };
+    tr.querySelector(".rowbtn").onclick = (e) => {
+      e.stopPropagation();
+      veil.classList.remove("veiled");
+      const i = +tr.dataset.i, key = m.id + ":" + i, b = tr.querySelector(".rowbtn");
+      if (missed.has(key)) { missed.delete(key); b.classList.remove("on"); b.textContent = "✗"; }
+      else { missed.add(key); b.classList.add("on"); b.textContent = "✗ missed"; }
+    };
+  });
+  document.getElementById("revealAll").onclick = () => tb.querySelectorAll(".veiled").forEach(v => v.classList.remove("veiled"));
+  document.getElementById("finish").onclick = () => {
+    m.items.forEach((it, i) => markCard(m.id + ":" + i, missed.has(m.id + ":" + i)));
+    const dm = doneMods(); dm[m.id] = true; store.set("tk-done", dm);
+    const next = MODULES.find(x => !doneMods()[x.id]);
+    app.innerHTML = `
+      <div class="card" style="text-align:center;padding:30px 16px">
+        <div class="big">✓ ${m.title} done${missed.size ? ` — ${missed.size} to revisit` : " — perfect!"}</div>
+        <p class="sub" style="margin:8px 0 16px">${missed.size ? "Your misses come back first in every refresh." : "Çok güzel! (very nice)"}</p>
+        <div class="exrow" style="justify-content:center">
+          ${next ? `<a href="#m/${next.id}"><button class="primary">▶ Next: ${next.title} (${next.min} min)</button></a>` : `<a href="#final"><button class="primary">🎓 Final check</button></a>`}
+          <a href="#home"><button>Home</button></a>
+        </div>
+      </div>`;
+  };
+}
+
+/* ---------- 10-minute refresh: misses first, then least recently seen ---------- */
+function review() {
+  const pool = allItems(true);
+  if (!pool.length) { location.hash = "home"; return; }
+  const c = cards();
+  const scored = pool.map(x => {
+    const e = c[x.key] || { miss: 0, seen: 0 };
+    return { ...x, miss: e.miss, seen: e.seen };
+  }).sort((a, b) => b.miss - a.miss || a.seen - b.seen);
+  const queue = scored.slice(0, 40).sort(() => 0.5 - Math.random());
+  app.innerHTML = `
+    <div class="top"><a class="crumb" href="#home">← Home</a><span class="tag">${queue.length} items ≈ 10 min</span></div>
+    <h1>🔁 10-minute refresh</h1>
+    <p class="sub">Misses first, then whatever you've seen least recently. Say the Turkish out loud, tap to check, mark only real misses.</p>
+    <div class="card">
+      <table><tbody id="tb">
+      ${queue.map((x, qi) => `<tr data-k="${x.key}" data-q="${qi}">
+        <td class="en-cell" style="width:45%">${x.it.en}${x.miss ? ` <span class="tag" style="color:var(--red)">missed ×${x.miss}</span>` : ""}</td>
+        <td class="veiled"><span><span class="tr-cell" style="font-size:16.5px">${x.it.tr}</span> <span class="say">${x.it.say || ""}</span></span></td>
+        <td style="width:60px"><button class="small rowbtn">✗</button></td>
+      </tr>`).join("")}
+      </tbody></table>
+      <div class="exrow">
+        <button class="small" id="revealAll">👁 Reveal all</button>
+        <button class="primary" id="finish">✓ Done — only the marked ones were misses</button>
+      </div>
+    </div>
+  `;
+  const tb = document.getElementById("tb");
+  const missed = new Set();
+  const byKey = Object.fromEntries(queue.map(x => [x.key, x]));
+  tb.querySelectorAll("tr").forEach(tr => {
+    const veil = tr.querySelector(".veiled");
+    tr.onclick = () => { veil.classList.remove("veiled"); if (_trVoice) speak(byKey[tr.dataset.k].it.tr); };
+    tr.querySelector(".rowbtn").onclick = (e) => {
+      e.stopPropagation(); veil.classList.remove("veiled");
+      const k = tr.dataset.k, b = tr.querySelector(".rowbtn");
+      if (missed.has(k)) { missed.delete(k); b.classList.remove("on"); b.textContent = "✗"; }
+      else { missed.add(k); b.classList.add("on"); b.textContent = "✗ missed"; }
+    };
+  });
+  document.getElementById("revealAll").onclick = () => tb.querySelectorAll(".veiled").forEach(v => v.classList.remove("veiled"));
+  document.getElementById("finish").onclick = () => {
+    queue.forEach(x => markCard(x.key, missed.has(x.key)));
+    const meta = store.get("tk-meta", {}); meta.lastRefresh = new Date().toDateString(); store.set("tk-meta", meta);
+    app.innerHTML = `
+      <div class="card" style="text-align:center;padding:30px 16px">
+        <div class="big">🔁 Refresh done — ${queue.length - missed.size}/${queue.length}</div>
+        <p class="sub" style="margin:8px 0 16px">${missed.size ? missed.size + " misses will lead the next refresh." : "Nothing missed. Hazırsın — you're ready."}</p>
+        <div class="exrow" style="justify-content:center"><a href="#home"><button class="primary">Home</button></a></div>
+      </div>`;
+  };
+}
+
+/* ---------- final check: 12 MCQs, 80% = trip-ready ---------- */
+function finalCheck() {
+  const pool = allItems(false).filter(x => x.mod.id !== "sounds");
+  const qs = pool.sort(() => 0.5 - Math.random()).slice(0, 12);
+  let pos = 0, right = 0;
+  function ask() {
+    if (pos >= qs.length) return finish();
+    const q = qs[pos];
+    const dir = Math.random() < 0.5;
+    const wrong = pool.filter(x => x.key !== q.key).sort(() => 0.5 - Math.random()).slice(0, 3);
+    const opts = [q, ...wrong].sort(() => 0.5 - Math.random());
+    app.innerHTML = `
+      <div class="top"><a class="crumb" href="#home">← Home</a><span class="tag">${pos + 1} / ${qs.length}</span></div>
+      <h1>🎓 Final check</h1>
+      <div class="card">
+        <p style="font-size:18px;font-weight:600">${dir ? q.it.tr : q.it.en}</p>
+        <p class="sub" style="margin:2px 0 8px">${dir ? "what does it mean?" : "how do you say it?"}</p>
+        <div class="mcq" id="opts">
+          ${opts.map((o, i) => `<button data-i="${i}">${dir ? o.it.en : o.it.tr}</button>`).join("")}
+        </div>
+        <div id="fb" style="min-height:30px;font-size:14px"></div>
+      </div>`;
+    document.querySelectorAll("#opts button").forEach(b => b.onclick = () => {
+      const pick = opts[+b.dataset.i];
+      const ok = pick.key === q.key;
+      if (ok) right++;
+      markCard(q.key, !ok);
+      document.querySelectorAll("#opts button").forEach(x => {
+        x.disabled = true;
+        if (opts[+x.dataset.i].key === q.key) x.classList.add("ok");
+      });
+      if (!ok) b.classList.add("no");
+      document.getElementById("fb").innerHTML = `${ok ? "✓" : "✗"} <strong>${q.it.tr}</strong> = ${q.it.en} <span class="say">${q.it.say || ""}</span>`;
+      pos++;
+      setTimeout(ask, ok ? 900 : 2400);
+    });
+  }
+  function finish() {
+    const pass = right >= 10;
+    if (pass) { const meta = store.get("tk-meta", {}); meta.pass = { score: right, date: new Date().toLocaleDateString() }; store.set("tk-meta", meta); }
+    app.innerHTML = `
+      <div class="card" style="text-align:center;padding:30px 16px">
+        <div class="big">${right} / ${qs.length} ${pass ? "— 🏅 trip-ready!" : ""}</div>
+        <p class="sub" style="margin:8px 0 16px">${pass ? "İyi yolculuklar — have a great trip! Do one refresh on the plane." : "10+ passes. One refresh round and try again — your misses now lead the queue."}</p>
+        <div class="exrow" style="justify-content:center">
+          ${pass ? "" : `<a href="#review"><button class="primary">🔁 Refresh first</button></a>`}
+          <a href="#final"><button ${pass ? 'class="primary"' : ""} onclick="setTimeout(render)">Try ${pass ? "again" : "the check again"}</button></a>
+          <a href="#home"><button>Home</button></a>
+        </div>
+      </div>`;
+  }
+  ask();
+}
+
+/* ---------- cheat sheet ---------- */
+function cheatSheet() {
+  app.innerHTML = `
+    <div class="top"><a class="crumb" href="#home">← Home</a></div>
+    <h1>📋 Cheat sheet</h1>
+    <p class="sub">Every phrase in the course. Filter by anything — Turkish, English, or how it sounds. Works offline; use it in the taxi.</p>
+    <input class="filter" id="q" placeholder="filter… (e.g. bill, taxi, thank)">
+    <div class="card"><table><tbody id="tb"></tbody></table></div>
+  `;
+  const tb = document.getElementById("tb");
+  const rows = [];
+  MODULES.forEach(m => m.items.forEach(it => rows.push({ m, it })));
+  function draw(f) {
+    const ff = (f || "").toLowerCase();
+    tb.innerHTML = rows.filter(({ m, it }) =>
+      !ff || (it.tr + " " + it.en + " " + (it.say || "") + " " + (it.note || "") + " " + m.title).toLowerCase().includes(ff)
+    ).map(({ m, it }) => `<tr>
+      <td class="tr-cell" style="font-size:16.5px">${it.tr} ${spkBtn(it.tr)}</td>
+      <td><span class="say">${it.say || ""}</span></td>
+      <td class="en-cell">${it.en}${it.note ? `<span class="note">${it.note}</span>` : ""}<span class="note">${m.ico} ${m.title}</span></td>
+    </tr>`).join("") || `<tr><td colspan="3" style="color:var(--muted)">nothing matches</td></tr>`;
+    wireSpk(tb);
+  }
+  draw("");
+  document.getElementById("q").oninput = e => draw(e.target.value);
+}
+
+/* ---------- offline ---------- */
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+
+render();
+</script>
+</body>
+</html>
