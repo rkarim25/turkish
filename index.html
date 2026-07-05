@@ -1358,6 +1358,12 @@ function home() {
     </div>
     <a class="mod" href="#all"><span class="ico">📋</span><span><span class="t">Cheat sheet</span><br>
       <span class="m">every phrase in one searchable table — for use in Turkey</span></span></a>
+    <div class="card" style="margin-top:14px;padding-bottom:6px"><h2 style="margin-bottom:4px">📖 Reading for the plane</h2>
+      <p class="sub" style="margin-bottom:10px">Two long reads — the culture behind the phrases, and the history behind the country. Both work offline.</p></div>
+    <a class="mod" href="articles/culture.html"><span class="ico">🤝</span><span><span class="t">Doing Business in Turkey: The Unwritten Rules</span><br>
+      <span class="m">trust, negotiation, the tea ritual, the three untouchables · 12 min</span></span></a>
+    <a class="mod" href="articles/history.html"><span class="ico">🏛</span><span><span class="t">The Story Every Turk Carries</span><br>
+      <span class="m">1071 → 1453 → 1915 → 1923, with diagrams — what every educated Turk knows · 15 min</span></span></a>
     <p class="sub" id="offStatus" style="margin-top:16px"></p>
     <p class="sub">💡 "Add to Home Screen" makes this an app. Tap any row in a test to hear the answer spoken. <strong>Studying in public?</strong> Earbuds + silently mouthing each word — articulating without sound keeps most of the memory benefit, and 🐢 gives you the slow version to shadow.</p>
   `;
@@ -1916,7 +1922,8 @@ function earsRound() {
    screen shows an honest count, so "offline-ready" is verified, not hoped. */
 const OFF = { checked: 0, total: 0, failed: 0, done: false };
 function offlineFileList() {
-  const files = ["index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
+  const files = ["index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png",
+    "articles/culture.html", "articles/history.html"];
   const both = f => { files.push(f, f.replace(".mp3", "-slow.mp3")); };
   MODULES.forEach(m => m.items.forEach((_, i) => both(`audio/${m.id}-${i}.mp3`)));
   CONVO.forEach((_, i) => both(`audio/conv-${i}.mp3`));

@@ -24,6 +24,7 @@ Three moving parts, no build step, no dependencies, no external requests (system
 |---|---|
 | `index.html` | The entire app: CSS + data + logic inline (~2,000 lines). Hash-routed SPA. |
 | `sw.js` | Service worker: **cache-first with background refresh** (stale-while-revalidate). Precaches CORE + all audio on install. A new deploy is picked up one load later. Bump `CACHE` (`tk-vN`) on every deploy **and keep its `MODS` count list in sync with the data**. |
+| `articles/` | Two long-read pages, offline like everything else: `culture.html` (business etiquette, trust architecture, negotiation) and `history.html` (the national story 1071-1923, with inline SVG diagrams). Self-contained styling; linked from home under Reading for the plane. |
 | `audio/` | 330 pre-generated mp3s (~7 MB): every item, conversation line, and Core-31 sentence in **two speeds** (`<id>-<i>.mp3` normal, `<id>-<i>-slow.mp3`). |
 
 ### Data structures (all inline in index.html)

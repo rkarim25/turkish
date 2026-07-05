@@ -4,8 +4,9 @@
    updates from the network; a new deploy is picked up one load later. This
    replaced network-first, which made every load wait on a network round-trip
    and felt slow on mobile. */
-const CACHE = "tk-v6";
-const CORE = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
+const CACHE = "tk-v7";
+const CORE = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png",
+  "articles/culture.html", "articles/history.html"];
 // every item, conversation line and Core-31 sentence ships TWO mp3s (normal + slow) — all precached
 const MODS = [["sounds", 10], ["polite", 15], ["survive", 12], ["numbers", 15], ["taxi", 12], ["hotel", 10], ["food", 14], ["work", 12], ["magic", 8], ["conv", 26], ["core", 31]];
 const AUDIO = MODS.flatMap(([id, n]) => Array.from({ length: n }, (_, i) => [`audio/${id}-${i}.mp3`, `audio/${id}-${i}-slow.mp3`]).flat());
