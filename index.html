@@ -147,7 +147,7 @@ const MODULES = [
   "ico": "🤝",
   "title": "The politeness pack",
   "min": 15,
-  "intro": "Turks are warm and formal at first meeting. These 15 phrases do 80% of your social work — say every one out loud.",
+  "intro": "Turks are warm and formal at first meeting. These 15 phrases do 80% of your social work — say each one (out loud at home, silently mouthed in public).",
   "items": [
    {
     "tr": "Merhaba",
@@ -1004,6 +1004,206 @@ const CONVO = [
  }
 ];
 
+/* Core 31: one story — Kayıp Cüzdan (The Lost Wallet) — 31 sentences that
+   carry the core of the language: to-be, var/yok, present/past/future, can,
+   want-to, every case ending, negation. Memorize the story, own the core. */
+const CORE31 = [
+ {
+  "tr": "Ben İstanbul'da bir turistim.",
+  "en": "I am a tourist in Istanbul.",
+  "say": "ben is-tahn-BOOL-dah beer too-REES-tim",
+  "parts": "ben = I · İstanbul-DA = Istanbul-IN · turist-İM = tourist-I-AM — the -im ending IS the verb “to be”"
+ },
+ {
+  "tr": "Türkçe öğreniyorum ama çok az biliyorum.",
+  "en": "I'm learning Turkish but I know very little.",
+  "say": "TEWRK-cheh uh-ren-ee-YOH-room ah-MAH chok AHZ bil-ee-YOH-room",
+  "parts": "öğren-iyor-um = learn-ING-I · ama = but (Arabic أمّا) · çok az = very little · bil-iyor-um = know-ing-I"
+ },
+ {
+  "tr": "Bugün önemli bir toplantım var.",
+  "en": "Today I have an important meeting.",
+  "say": "boo-GEWN uh-nem-LEE beer top-lahn-TUHM var",
+  "parts": "bu-gün = this-day · önemli = important · toplantı-M VAR = meeting-MY exists — “to have” is just var again"
+ },
+ {
+  "tr": "Otelden çıkıyorum ve taksi arıyorum.",
+  "en": "I leave the hotel and look for a taxi.",
+  "say": "oh-tel-DEN chuh-kuh-YOH-room veh tahk-SEE ah-ruh-YOH-room",
+  "parts": "otel-DEN = hotel-FROM (-den = from) · çık-ıyor-um = exit-ing-I · ve = and (Arabic وَ) · ar-ıyor-um = search-ing-I"
+ },
+ {
+  "tr": "\"Merkeze gitmek istiyorum,\" diyorum.",
+  "en": "\"I want to go to the center,\" I say.",
+  "say": "mer-keh-ZEH git-MEK is-tee-YOH-room, dee-YOH-room",
+  "parts": "merkez-E = center-TO (merkez — Arabic مركز!) · git-MEK = go-TO (the -mek makes “to go”) · istiyorum = I want · di-yor-um = say-ing-I",
+  "mn": "gitmek istiyorum = “I steal your rum to GET going”"
+ },
+ {
+  "tr": "Yolda çok trafik var.",
+  "en": "There is a lot of traffic on the road.",
+  "say": "yol-DAH chok trah-FEEK var",
+  "parts": "yol-DA = road-ON · çok = a lot · trafik var = traffic exists"
+ },
+ {
+  "tr": "\"Ne zaman varırız?\" diye soruyorum.",
+  "en": "\"When do we arrive?\" I ask.",
+  "say": "neh zah-MAHN vah-ruh-RUHZ dee-YEH soh-roo-YOH-room",
+  "parts": "ne zaman = what time → “when” (zaman — Arabic زمان!) · var-ır-ız = arrive-we · diye soruyorum = I ask, saying"
+ },
+ {
+  "tr": "Şoför, \"On dakika sonra,\" diyor.",
+  "en": "The driver says, \"In ten minutes.\"",
+  "say": "shoh-FUR, ohn dah-KEE-kah SOHN-rah, dee-YOR",
+  "parts": "şoför = chauffeur (French) · on dakika = ten minutes (Arabic دقيقة) · sonra = later/after · diyor = he says"
+ },
+ {
+  "tr": "Parayı veriyorum ve iniyorum.",
+  "en": "I give the money and get out.",
+  "say": "pah-rah-YUH veh-ree-YOH-room veh ee-nee-YOH-room",
+  "parts": "para-YI = money-THE (-ı/-i marks the specific object) · ver-iyor-um = give-ing-I · in-iyor-um = get-off-ing-I"
+ },
+ {
+  "tr": "Ama bir sorun var: cüzdanım yok!",
+  "en": "But there's a problem: my wallet is gone!",
+  "say": "ah-MAH beer soh-ROON var: jewz-dah-NUHM yok",
+  "parts": "sorun var = a problem exists · cüzdan-ım YOK = wallet-my is-ABSENT — var's evil twin",
+  "mn": "cüzdan: your COUSIN DON always holds your wallet — and now he's gone"
+ },
+ {
+  "tr": "Cüzdanımı takside unuttum.",
+  "en": "I forgot my wallet in the taxi.",
+  "say": "jewz-dah-nuh-MUH tahk-see-DEH oo-noot-TOOM",
+  "parts": "taksi-DE = taxi-IN · unut-TUM = forgot-I — the -dum/-tum ending is the simple past",
+  "mn": "“YOU NUT — you forgot it!” — unuttum"
+ },
+ {
+  "tr": "Ne yapabilirim?",
+  "en": "What can I do?",
+  "say": "neh yah-pah-bee-LEE-rim",
+  "parts": "ne = what · yap-ABİL-ir-im = do-CAN-I — the little -abil- inside any verb means “can”"
+ },
+ {
+  "tr": "Bir polise gidiyorum ve yardım istiyorum.",
+  "en": "I go to a policeman and ask for help.",
+  "say": "beer poh-lee-SEH gee-dee-YOH-room veh yar-DUHM is-tee-YOH-room",
+  "parts": "polis-E = police-TO · gid-iyor-um = go-ing-I · yardım istiyorum = I want help"
+ },
+ {
+  "tr": "\"İngilizce konuşabilir misiniz?\" diyorum.",
+  "en": "\"Can you speak English?\" I say.",
+  "say": "in-gee-LEEZ-jeh koh-noo-shah-bee-LEER mee-see-neez",
+  "parts": "konuş-abilir = speak-CAN · misiniz = ?-you — “can” + question particle together"
+ },
+ {
+  "tr": "Polis beni anlamıyor.",
+  "en": "The policeman doesn't understand me.",
+  "say": "poh-LEES beh-NEE ahn-lah-MUH-yor",
+  "parts": "beni = me · anla-M-ıyor = understand-NOT-ing — the tiny -m- kills any verb",
+  "mn": "the dim llama again — nobody understands anybody"
+ },
+ {
+  "tr": "Yavaş yavaş Türkçe konuşuyorum.",
+  "en": "Slowly, slowly I speak Turkish.",
+  "say": "yah-VAHSH yah-VAHSH TEWRK-cheh koh-noo-shoo-YOH-room",
+  "parts": "yavaş yavaş — Turkish doubles a word to make “-ly”: slow-slow = slowly. It loves doing this."
+ },
+ {
+  "tr": "\"Cüzdanım takside kaldı,\" diyorum.",
+  "en": "\"My wallet stayed in the taxi,\" I say.",
+  "say": "jewz-dah-NUHM tahk-see-DEH kahl-DUH",
+  "parts": "kal-DI = stayed-PAST — that past -dı again"
+ },
+ {
+  "tr": "Polis telefonla taksiciyi arıyor.",
+  "en": "The policeman calls the taxi driver by phone.",
+  "say": "poh-LEES teh-leh-fohn-LAH tahk-see-jee-YEE ah-ruh-YOR",
+  "parts": "telefon-LA = telephone-WITH (-la/-le = with/by) · taksi-Cİ = taxi-GUY — -ci turns anything into the person who does it (çay → çaycı, the tea man!)"
+ },
+ {
+  "tr": "Şoför iyi bir insan.",
+  "en": "The driver is a good person.",
+  "say": "shoh-FUR ee BEER in-SAHN",
+  "parts": "insan = person/human — the exact Arabic إنسان from your Quran core!"
+ },
+ {
+  "tr": "Yarım saat sonra geri geliyor.",
+  "en": "Half an hour later, he comes back.",
+  "say": "yah-RUHM sah-AHT SOHN-rah geh-REE geh-lee-YOR",
+  "parts": "yarım = half · saat = hour (Arabic ساعة) · geri = back · gel-iyor = come-ing"
+ },
+ {
+  "tr": "\"Çok teşekkür ederim! Siz harikasınız!\"",
+  "en": "\"Thank you so much! You are wonderful!\"",
+  "say": "chok teh-shek-KEWR eh-deh-reem! seez hah-ree-kah-suh-NUHZ",
+  "parts": "siz = you (polite) · harika-SINIZ = wonderful-YOU-ARE (harika — Arabic خارقة)",
+  "mn": "harika ≈ EUREKA! — wonderful!"
+ },
+ {
+  "tr": "Ona küçük bir hediye vermek istiyorum.",
+  "en": "I want to give him a small gift.",
+  "say": "oh-NAH kew-CHEWK beer heh-dee-YEH ver-MEK is-tee-YOH-room",
+  "parts": "o-NA = him-TO · küçük = small · hediye = gift — the exact Arabic هدية! · ver-mek = to give"
+ },
+ {
+  "tr": "Ama o, \"Gerek yok,\" diyor.",
+  "en": "But he says, \"No need.\"",
+  "say": "ah-MAH oh, geh-REK yok, dee-YOR",
+  "parts": "gerek yok = need is-absent → “no need” — THE polite refusal; you'll use it on every street seller"
+ },
+ {
+  "tr": "Şimdi toplantıya geç kalıyorum.",
+  "en": "Now I'm running late for the meeting.",
+  "say": "SHIM-dee top-lahn-tuh-YAH gech kah-luh-YOH-room",
+  "parts": "toplantı-YA = meeting-TO · geç kal-ıyorum = late stay-ing = running late"
+ },
+ {
+  "tr": "Toplantıda herkes çok nazik.",
+  "en": "At the meeting everyone is very kind.",
+  "say": "top-lahn-tuh-DAH her-KES chok nah-ZEEK",
+  "parts": "toplantı-DA = meeting-AT · her-kes = every-person (Persian) · nazik = kind — cousin of Bengali নাজুক"
+ },
+ {
+  "tr": "\"Geç kaldım, özür dilerim,\" diyorum.",
+  "en": "\"I'm late, I'm sorry,\" I say.",
+  "say": "gech kahl-DUHM, uh-ZEWR dee-leh-reem",
+  "parts": "geç kal-DIM = late stayed-I — past tense on yourself this time"
+ },
+ {
+  "tr": "Akşam meslektaşlarımla yemek yiyoruz.",
+  "en": "In the evening I eat dinner with my colleagues.",
+  "say": "ahk-SHAHM mes-lek-tash-lah-ruhm-LAH yeh-MEK yee-YOH-rooz",
+  "parts": "meslektaş-lar-ım-la = colleague-S-MY-WITH — four suffixes stacked on one word; this is the whole language in one word · yemek yi-yor-uz = meal eat-ing-WE",
+  "mn": "yemek = YUM-mek"
+ },
+ {
+  "tr": "Yemekten sonra çay içiyoruz ve konuşuyoruz.",
+  "en": "After the meal we drink tea and talk.",
+  "say": "yeh-mek-TEN SOHN-rah CHAI ee-chee-YOH-rooz",
+  "parts": "yemek-TEN sonra = meal-FROM after = “after the meal” · iç-iyor-uz = drink-ing-we",
+  "mn": "içmek: EACH tea gets drunk — iç, iç, iç"
+ },
+ {
+  "tr": "\"Türkiye'yi çok seviyorum,\" diyorum.",
+  "en": "\"I love Turkey very much,\" I say.",
+  "say": "tewr-kee-YEH-yee chok seh-vee-YOH-room",
+  "parts": "Türkiye-Yİ = Turkey-THE · sev-iyor-um = love-ing-I"
+ },
+ {
+  "tr": "Herkes gülüyor: \"Yine gel!\"",
+  "en": "Everyone laughs: \"Come again!\"",
+  "say": "her-KES gew-lew-YOR: yee-NEH gel",
+  "parts": "gül-üyor = laugh-ing · yine = again · gel! = come! — the bare verb stem is the command",
+  "mn": "everyone laughs when the GOAL goes in — gül!"
+ },
+ {
+  "tr": "Bir gün cüzdanımla geri geleceğim!",
+  "en": "One day I will come back — with my wallet!",
+  "say": "beer GEWN jewz-dah-nuhm-LAH geh-REE geh-leh-jeh-EEM",
+  "parts": "bir gün = one day · cüzdanım-LA = wallet-my-WITH · gel-ECEĞ-im = come-WILL-I — the -ecek is the future tense, and the story's punchline"
+ }
+];
+
 /* ---------- storage ---------- */
 const store = {
   get(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v === null || v === undefined ? d : v; } catch (e) { return d; } },
@@ -1011,13 +1211,28 @@ const store = {
 };
 const doneMods = () => store.get("tk-done", {});
 const cards = () => store.get("tk-cards", {});
+/* Spaced repetition, kept invisible: every clean pass grows an item's streak
+   and pushes its next due date out (10 min → 1 d → 3 d → 7 d → 14 d); one
+   miss resets it to due-now. The UX stays mark-the-missed tables — the
+   scheduling happens silently underneath. */
+const INTERVALS = [10 * 60e3, 864e5, 3 * 864e5, 7 * 864e5, 14 * 864e5];
+function isDue(e, now) {
+  if (!e) return false;
+  if (e.miss > 0) return true;
+  return now - e.seen > INTERVALS[Math.min(e.streak || 0, INTERVALS.length - 1)];
+}
 function markCard(key, missed) {
   const c = store.get("tk-cards", {});
-  const e = c[key] || { miss: 0, seen: 0, reps: 0 };
-  if (missed) e.miss++; else e.miss = Math.max(0, e.miss - 1);
+  const e = c[key] || { miss: 0, seen: 0, reps: 0, streak: 0 };
+  if (missed) { e.miss++; e.streak = 0; }
+  else { e.miss = Math.max(0, e.miss - 1); e.streak = (e.streak || 0) + 1; }
   e.seen = Date.now(); e.reps++;
   c[key] = e;
   store.set("tk-cards", c);
+}
+function dueCount() {
+  const c = cards(); const now = Date.now();
+  return allItems(true).filter(x => isDue(c[x.key], now)).length;
 }
 function allItems(onlyDone) {
   const out = [];
@@ -1028,6 +1243,10 @@ function allItems(onlyDone) {
   // your lines from the conversation join the refresh/final pool once played
   if (!onlyDone || doneMods().conv) {
     CONVO.forEach((l, i) => { if (l.who === "you") out.push({ key: "conv:" + i, mod: { id: "conv", ico: "🎭", title: "The conversation" }, it: l }); });
+  }
+  // the Core 31 story sentences join once practised
+  if (!onlyDone || doneMods().core31) {
+    CORE31.forEach((l, i) => out.push({ key: "core:" + i, mod: { id: "core", ico: "⭐", title: "Core 31" }, it: l }));
   }
   return out;
 }
@@ -1051,18 +1270,19 @@ function speak(t) {
 }
 let _cur = null;
 function stopAudio() { if (_cur) { _cur.onended = null; _cur.pause(); _cur = null; } }
-function playKey(key, tr, onend) {
+function playKey(key, tr, onend, slow) {
   stopAudio();
-  const a = new Audio("audio/" + key.replace(":", "-") + ".mp3");
+  const a = new Audio("audio/" + key.replace(":", "-") + (slow ? "-slow" : "") + ".mp3");
   _cur = a;
   if (onend) a.onended = onend;
   a.play().catch(() => { speak(tr); if (onend) setTimeout(onend, 1500); });
 }
-const spkBtn = key => `<button class="small spk" data-key="${key}">🔊</button>`;
+/* every word gets two speeds: 🔊 normal, 🐢 slow — syllable by syllable */
+const spkBtn = key => `<button class="small spk" data-key="${key}">🔊</button><button class="small spk" data-key="${key}" data-slow="1" title="slow">🐢</button>`;
 function wireSpk(root, lookup) {
   root.querySelectorAll(".spk").forEach(b => b.onclick = e => {
     e.stopPropagation();
-    playKey(b.dataset.key, lookup ? lookup(b.dataset.key) : "");
+    playKey(b.dataset.key, lookup ? lookup(b.dataset.key) : "", null, b.dataset.slow);
   });
 }
 
@@ -1078,6 +1298,9 @@ function render() {
   if (h === "all") return cheatSheet();
   if (h === "conv") return convView(false);
   if (h === "conv-play") return convView(true);
+  if (h === "core31") return core31View(false);
+  if (h === "core31-play") return core31View(true);
+  if (h === "ears") return earsRound();
   const [kind, id] = h.split("/");
   const m = MODULES.find(x => x.id === id);
   if (kind === "m" && m) return study(m);
@@ -1092,8 +1315,7 @@ function home() {
   const minLeft = MODULES.filter(m => !dm[m.id]).reduce((a, m) => a + m.min, 0);
   const meta = store.get("tk-meta", {});
   const next = MODULES.find(m => !dm[m.id]);
-  const c = cards();
-  const missCount = Object.values(c).filter(x => x.miss > 0).length;
+  const due = dueCount();
   app.innerHTML = `
     <h1>Türkçe <span style="color:var(--red)">in 2 hours</span></h1>
     <p class="sub">A work-trip course: 9 modules ≈ 2 hours, then a 10-minute refresh whenever you like.
@@ -1104,7 +1326,8 @@ function home() {
       <div class="bar"><div style="width:${Math.round(nDone / MODULES.length * 100)}%"></div></div>
       ${next ? `<div class="exrow"><a href="#m/${next.id}"><button class="primary">▶ ${nDone ? "Continue" : "Start"}: ${next.title} (${next.min} min)</button></a></div>` : `
       <div class="exrow">
-        <a href="#review"><button class="primary">🔁 10-minute refresh${missCount ? ` (${missCount} weak)` : ""}</button></a>
+        <a href="#review"><button class="primary">🔁 10-minute refresh${due ? ` (${due} due)` : ""}</button></a>
+        <a href="#ears"><button>🎧 Ears round (5 min)</button></a>
         <a href="#final"><button>${meta.pass ? "🏅 Trip-ready — retake final check" : "🎓 Final check (12 questions)"}</button></a>
       </div>
       ${meta.pass ? `<p style="font-size:13px;color:var(--green);font-weight:600;margin-top:8px">🏅 Certified trip-ready — ${meta.pass.score}/12 on ${meta.pass.date}. Do the refresh before you land.</p>` : ""}`}
@@ -1121,15 +1344,22 @@ function home() {
       <span class="m">taxi → check-in → café · ${CONVO.length} lines, two voices · then play your role</span></span>
       ${dm.conv ? `<span class="done">✓</span>` : `<span class="togo">12 min</span>`}
     </a>
+    <a class="mod" href="#core31" style="border-color:var(--amber)">
+      <span class="ico">⭐</span>
+      <span><span class="t">Core 31 — Kayıp Cüzdan (The Lost Wallet)</span><br>
+      <span class="m">one story, 31 sentences, the whole grammatical core hidden inside · memorize it, own the language</span></span>
+      ${dm.core31 ? `<span class="done">✓</span>` : `<span class="togo">20 min</span>`}
+    </a>
     <div class="card" style="margin-top:14px">
       <div class="top"><h2>🔁 10-minute refresh</h2>${nDone ? "" : `<span class="tag">unlocks after your first module</span>`}</div>
-      <p class="sub" style="margin:0 0 8px">Re-tests what you've learnt, misses first. Do it once a day until the trip, once on the plane, and once in the hotel — that's the whole maintenance plan.</p>
-      ${nDone ? `<a href="#review"><button class="primary">Start refresh</button></a>` : ""}
+      <p class="sub" style="margin:0 0 8px">Misses first, then whatever the spaced schedule says is due (10 min → 1 d → 3 d → 7 d — a miss resets the clock). Once a day until the trip, once on the plane, once in the hotel.${meta.lastRefresh ? ` <strong>Last refresh: ${meta.lastRefresh === new Date().toDateString() ? "today ✓" : meta.lastRefresh}</strong>` : ""}</p>
+      ${nDone ? `<div class="exrow" style="margin-top:0"><a href="#review"><button class="primary">🔁 Refresh${due ? ` (${due} due)` : ""}</button></a>
+      <a href="#ears"><button>🎧 Ears round — sound first, no text</button></a></div>` : ""}
     </div>
     <a class="mod" href="#all"><span class="ico">📋</span><span><span class="t">Cheat sheet</span><br>
       <span class="m">every phrase in one searchable table — for use in Turkey</span></span></a>
     <p class="sub" id="offStatus" style="margin-top:16px"></p>
-    <p class="sub">💡 "Add to Home Screen" makes this an app. Tap any row in a test to hear the answer spoken.</p>
+    <p class="sub">💡 "Add to Home Screen" makes this an app. Tap any row in a test to hear the answer spoken. <strong>Studying in public?</strong> Earbuds + silently mouthing each word — articulating without sound keeps most of the memory benefit, and 🐢 gives you the slow version to shadow.</p>
   `;
   updateOffStatus();
 }
@@ -1154,7 +1384,7 @@ function study(m) {
       </tr>`).join("")}
       </tbody></table>
       <div class="exrow">
-        <a href="#t/${m.id}"><button class="primary">I've said them aloud — test me →</button></a>
+        <a href="#t/${m.id}"><button class="primary">Said them (aloud or mouthed) — test me →</button></a>
       </div>
     </div>
   `;
@@ -1182,13 +1412,13 @@ function test(m) {
   app.innerHTML = `
     <div class="top"><a class="crumb" href="#m/${m.id}">← Back to the table</a></div>
     <h1>${m.ico} ${m.title} — test</h1>
-    <p class="sub">Read the English, say the Turkish OUT LOUD from memory, then tap the row to check. Mark ✗ only what you missed.</p>
+    <p class="sub">Read the English, say the Turkish from memory — out loud, or just silently MOUTH it (in public that keeps almost all the benefit), then tap to check. Mark ✗ only what you missed.</p>
     <div class="card">
       <table><tbody id="tb">
       ${order.map(i => { const it = m.items[i]; return `<tr data-i="${i}">
         <td class="en-cell" style="width:45%">${it.en}</td>
-        <td class="veiled"><span><span class="tr-cell" style="font-size:16.5px">${it.tr}</span> <span class="say">${it.say || ""}</span>${it.mn ? `<span class="mn">💡 ${it.mn}</span>` : ""}</span></td>
-        <td style="width:60px"><button class="small rowbtn">✗</button></td>
+        <td class="veiled"><span><span class="tr-cell" style="font-size:16.5px">${it.tr}</span> ${spkBtn(m.id + ":" + i)} <span class="say">${it.say || ""}</span>${it.mn ? `<span class="mn">💡 ${it.mn}</span>` : ""}</span></td>
+        <td style="width:96px;white-space:nowrap"><button class="small hintbtn" title="first letters">🔤</button> <button class="small rowbtn">✗</button></td>
       </tr>`; }).join("")}
       </tbody></table>
       <div class="exrow">
@@ -1199,6 +1429,8 @@ function test(m) {
   `;
   const tb = document.getElementById("tb");
   const missed = new Set();
+  wireSpk(tb, k => m.items[+k.split(":")[1]].tr);
+  wireHints(tb, tr => m.items[+tr.dataset.i].tr);
   tb.querySelectorAll("tr").forEach(tr => {
     const veil = tr.querySelector(".veiled");
     tr.onclick = () => { veil.classList.remove("veiled"); const i = +tr.dataset.i; playKey(m.id + ":" + i, m.items[i].tr); };
@@ -1236,21 +1468,22 @@ function review() {
   const pool = allItems(true);
   if (!pool.length) { location.hash = "home"; return; }
   const c = cards();
+  const now = Date.now();
   const scored = pool.map(x => {
-    const e = c[x.key] || { miss: 0, seen: 0 };
-    return { ...x, miss: e.miss, seen: e.seen };
-  }).sort((a, b) => b.miss - a.miss || a.seen - b.seen);
+    const e = c[x.key] || { miss: 0, seen: 0, streak: 0 };
+    return { ...x, miss: e.miss, seen: e.seen, due: isDue(e, now) ? 1 : 0 };
+  }).sort((a, b) => b.miss - a.miss || b.due - a.due || a.seen - b.seen);
   const queue = scored.slice(0, 40).sort(() => 0.5 - Math.random());
   app.innerHTML = `
     <div class="top"><a class="crumb" href="#home">← Home</a><span class="tag">${queue.length} items ≈ 10 min</span></div>
     <h1>🔁 10-minute refresh</h1>
-    <p class="sub">Misses first, then whatever you've seen least recently. Say the Turkish out loud, tap to check, mark only real misses.</p>
+    <p class="sub">Weak words lead, then whatever the spaced schedule says is due — and strong words rotate back in to prove they stuck. Say (or silently mouth) the Turkish, tap to check, mark only real misses.</p>
     <div class="card">
       <table><tbody id="tb">
       ${queue.map((x, qi) => `<tr data-k="${x.key}" data-q="${qi}">
         <td class="en-cell" style="width:45%">${x.it.en}${x.miss ? ` <span class="tag" style="color:var(--red)">missed ×${x.miss}</span>` : ""}</td>
-        <td class="veiled"><span><span class="tr-cell" style="font-size:16.5px">${x.it.tr}</span> <span class="say">${x.it.say || ""}</span>${x.it.mn ? `<span class="mn">💡 ${x.it.mn}</span>` : ""}</span></td>
-        <td style="width:60px"><button class="small rowbtn">✗</button></td>
+        <td class="veiled"><span><span class="tr-cell" style="font-size:16.5px">${x.it.tr}</span> ${spkBtn(x.key)} <span class="say">${x.it.say || ""}</span>${x.it.mn ? `<span class="mn">💡 ${x.it.mn}</span>` : ""}</span></td>
+        <td style="width:96px;white-space:nowrap"><button class="small hintbtn" title="first letters">🔤</button> <button class="small rowbtn">✗</button></td>
       </tr>`).join("")}
       </tbody></table>
       <div class="exrow">
@@ -1262,6 +1495,8 @@ function review() {
   const tb = document.getElementById("tb");
   const missed = new Set();
   const byKey = Object.fromEntries(queue.map(x => [x.key, x]));
+  wireSpk(tb, k => byKey[k].it.tr);
+  wireHints(tb, tr => byKey[tr.dataset.k].it.tr);
   tb.querySelectorAll("tr").forEach(tr => {
     const veil = tr.querySelector(".veiled");
     tr.onclick = () => { veil.classList.remove("veiled"); playKey(tr.dataset.k, byKey[tr.dataset.k].it.tr); };
@@ -1374,6 +1609,28 @@ function cheatSheet() {
   document.getElementById("q").oninput = e => draw(e.target.value);
 }
 
+/* first-letter skeleton: partial retrieval — a nudge, not the answer */
+function skelOf(tr) {
+  return tr.split(" ").map(w => {
+    const clean = w.replace(/[^A-Za-zÇĞİÖŞÜçğıöşü']/g, "");
+    return clean ? clean[0] + "·".repeat(Math.max(1, clean.length - 1)) : w;
+  }).join(" ");
+}
+function wireHints(tb, getTr) {
+  tb.querySelectorAll(".hintbtn").forEach(b => b.onclick = e => {
+    e.stopPropagation();
+    const tr = b.closest("tr");
+    const cell = tr.querySelector(".en-cell");
+    if (!cell.querySelector(".skel")) {
+      const s = document.createElement("div");
+      s.className = "say skel";
+      s.textContent = "🔤 " + skelOf(getTr(tr));
+      cell.appendChild(s);
+    }
+    b.style.display = "none";
+  });
+}
+
 /* ---------- drill the misses: repeat until the pile is empty ----------
    Same reveal-and-mark table (never flashcards) over ONLY the missed items,
    round after round, until nothing is marked. Every round feeds the SRS:
@@ -1385,13 +1642,13 @@ function drillLoop(pairs, round) {
   app.innerHTML = `
     <div class="top"><a class="crumb" href="#home">← Home</a><span class="tag">miss drill · round ${round} · ${pairs.length} left</span></div>
     <h1>🎯 Only your misses</h1>
-    <p class="sub">Say it out loud, tap to check (it plays), mark only what you still miss. Repeats until the pile is empty — mnemonics show on reveal to re-anchor.</p>
+    <p class="sub">Say it — or mouth it silently — then tap to check (it plays). Repeats until the pile is empty; mnemonics show on reveal to re-anchor.</p>
     <div class="card">
       <table><tbody id="tb">
       ${order.map(i => { const it = pairs[i].it; return `<tr data-i="${i}">
         <td class="en-cell" style="width:45%">${it.en}</td>
-        <td class="veiled"><span><span class="tr-cell" style="font-size:16.5px">${it.tr}</span> <span class="say">${it.say || ""}</span>${it.mn ? `<span class="mn">💡 ${it.mn}</span>` : ""}${it.parts ? `<span class="parts">🧩 ${it.parts}</span>` : ""}</span></td>
-        <td style="width:60px"><button class="small rowbtn">✗</button></td>
+        <td class="veiled"><span><span class="tr-cell" style="font-size:16.5px">${it.tr}</span> ${spkBtn(pairs[i].key)} <span class="say">${it.say || ""}</span>${it.mn ? `<span class="mn">💡 ${it.mn}</span>` : ""}${it.parts ? `<span class="parts">🧩 ${it.parts}</span>` : ""}</span></td>
+        <td style="width:96px;white-space:nowrap"><button class="small hintbtn" title="first letters">🔤</button> <button class="small rowbtn">✗</button></td>
       </tr>`; }).join("")}
       </tbody></table>
       <div class="exrow">
@@ -1402,6 +1659,8 @@ function drillLoop(pairs, round) {
   `;
   const tb = document.getElementById("tb");
   const missed = new Set();
+  wireSpk(tb, k => { const p = pairs.find(x => x.key === k); return p ? p.it.tr : ""; });
+  wireHints(tb, tr => pairs[+tr.dataset.i].it.tr);
   tb.querySelectorAll("tr").forEach(tr => {
     const veil = tr.querySelector(".veiled");
     const i = +tr.dataset.i;
@@ -1435,7 +1694,7 @@ function convView(practice) {
     <div class="top"><a class="crumb" href="#home">← Home</a><span class="tag">${CONVO.length} lines · ≈12 min</span></div>
     <h1>🎭 The conversation</h1>
     <p class="sub">${practice
-      ? "Now it's real: the locals speak, YOUR lines are hidden. Say each of your lines out loud from memory, then tap to check (it plays too). Mark ✗ only real misses."
+      ? "Now it's real: the locals speak, YOUR lines are hidden. Say each of your lines from memory — out loud or silently mouthed — then tap to check (it plays too). Mark ✗ only real misses."
       : "Your first day, compressed: airport taxi → hotel check-in → café. Listen through once, read the word-by-word breakdowns, then play your role."}</p>
     <div class="card">
       <div class="exrow" style="margin:0 0 8px">
@@ -1454,7 +1713,7 @@ function convView(practice) {
     div.className = "cline" + (you ? " you" : "");
     div.id = "cl-" + i;
     const body = `
-      <span class="tr-cell" style="font-size:17px">${l.tr}</span> <button class="small spk" data-key="conv:${i}">🔊</button>
+      <span class="tr-cell" style="font-size:17px">${l.tr}</span> ${spkBtn("conv:" + i)}
       <span class="say">${l.say}</span>
       <span class="note" style="color:var(--ink)">${l.en}</span>
       ${l.parts ? `<span class="parts">🧩 ${l.parts}</span>` : ""}`;
@@ -1509,6 +1768,147 @@ function convView(practice) {
 }
 let trackConvDone = false;
 
+/* ---------- Core 31: one story that carries the language ---------- */
+function core31View(practice) {
+  const missed = new Set();
+  app.innerHTML = `
+    <div class="top"><a class="crumb" href="#home">← Home</a><span class="tag">31 sentences · ≈20 min first time</span></div>
+    <h1>⭐ Core 31 — Kayıp Cüzdan</h1>
+    <p class="sub">${practice
+      ? "The story is your memory palace: read each English line, say the Turkish from memory — mouthing it silently works in public — then tap to check. 🔤 gives first letters if you're close. Mark ✗ only real misses."
+      : "<strong>The Lost Wallet</strong> — one story, 31 sentences, and inside them the entire core of Turkish: I-am, I-have, there-is/isn't, want, can, past, future, every case ending. Memorize the story and you carry the grammar for free. Listen through, read the 🧩 breakdowns, and say every line — mouthing counts."}</p>
+    <div class="card">
+      <div class="exrow" style="margin:0 0 8px">
+        <button id="playScene">▶ Play the whole story</button>
+        <button class="small" id="stopScene">■</button>
+        ${practice ? "" : `<a href="#core31-play" style="margin-left:auto"><button class="primary">🧠 Tell the story yourself →</button></a>`}
+      </div>
+      <div id="lines"></div>
+      ${practice ? `<div class="exrow"><button class="primary" id="coreFinish">✓ Done — I only missed the marked ones</button></div>` : ""}
+    </div>
+  `;
+  const lines = document.getElementById("lines");
+  CORE31.forEach((l, i) => {
+    const div = document.createElement("div");
+    div.className = "cline";
+    div.id = "cl-" + i;
+    const body = `
+      <span class="tr-cell" style="font-size:17px">${l.tr}</span> ${spkBtn("core:" + i)}
+      <span class="say">${l.say}</span>
+      <span class="note" style="color:var(--ink)">${l.en}</span>
+      ${l.parts ? `<span class="parts">🧩 ${l.parts}</span>` : ""}
+      ${l.mn ? `<span class="mn">💡 ${l.mn}</span>` : ""}`;
+    if (practice) {
+      div.innerHTML = `<span class="who">${i + 1}.</span>
+        <span class="note" style="color:var(--ink);font-size:14.5px">${l.en}</span>
+        <div class="veiled" style="padding:4px 8px;margin-top:4px"><span>${body}</span></div>
+        <div style="margin-top:6px"><button class="small hintbtn2" data-i="${i}" title="first letters">🔤</button>
+        <button class="small rowbtn" data-i="${i}">✗</button></div>`;
+      const veil = div.querySelector(".veiled");
+      veil.onclick = () => { veil.classList.remove("veiled"); playKey("core:" + i, l.tr); };
+      div.querySelector(".hintbtn2").onclick = (e) => {
+        e.stopPropagation();
+        if (!div.querySelector(".skel")) {
+          const s = document.createElement("div");
+          s.className = "say skel"; s.textContent = "🔤 " + skelOf(l.tr);
+          e.target.parentElement.before(s);
+        }
+        e.target.style.display = "none";
+      };
+      div.querySelector(".rowbtn").onclick = (e) => {
+        e.stopPropagation(); veil.classList.remove("veiled");
+        const b = e.target;
+        if (missed.has(i)) { missed.delete(i); b.classList.remove("on"); b.textContent = "✗"; }
+        else { missed.add(i); b.classList.add("on"); b.textContent = "✗ missed"; }
+      };
+    } else {
+      div.innerHTML = `<span class="who">${i + 1}.</span><div>${body}</div>`;
+    }
+    lines.appendChild(div);
+  });
+  wireSpk(lines, k => CORE31[+k.split(":")[1]].tr);
+  document.getElementById("playScene").onclick = () => {
+    let i = 0;
+    const next = () => {
+      if (i >= CORE31.length) { CORE31.forEach((_, x) => document.getElementById("cl-" + x).style.outline = ""); return; }
+      CORE31.forEach((_, x) => document.getElementById("cl-" + x).style.outline = x === i ? "2px solid var(--red)" : "");
+      document.getElementById("cl-" + i).scrollIntoView({ block: "center", behavior: "smooth" });
+      const cur = i; i++;
+      playKey("core:" + cur, CORE31[cur].tr, () => setTimeout(next, 500));
+    };
+    next();
+  };
+  document.getElementById("stopScene").onclick = () => { stopAudio(); CORE31.forEach((_, x) => document.getElementById("cl-" + x).style.outline = ""); };
+  const fin = document.getElementById("coreFinish");
+  if (fin) fin.onclick = () => {
+    CORE31.forEach((l, i) => markCard("core:" + i, missed.has(i)));
+    const dm = doneMods(); dm.core31 = true; store.set("tk-done", dm);
+    const missPairs = CORE31.map((l, i) => ({ key: "core:" + i, it: l, i })).filter(p => missed.has(p.i));
+    app.innerHTML = `
+      <div class="card" style="text-align:center;padding:30px 16px">
+        <div class="big">⭐ Story told${missed.size ? ` — ${missed.size} sentence${missed.size > 1 ? "s" : ""} to nail down` : " — the whole core, from memory!"}</div>
+        <p class="sub" style="margin:8px 0 16px">The 31 sentences now cycle through your refresh on a spaced schedule. Re-listen to the story on any dead time — it's ${CORE31.length} lines of pure high-frequency Turkish.</p>
+        <div class="exrow" style="justify-content:center">
+          ${missPairs.length ? `<button class="primary" id="drillNow">🎯 Drill my ${missPairs.length} miss${missPairs.length > 1 ? "es" : ""} until clean</button>` : ""}
+          <a href="#core31"><button>▶ Replay the story</button></a>
+          <a href="#home"><button ${missPairs.length ? "" : 'class="primary"'}>Home</button></a>
+        </div>
+      </div>`;
+    const dn = document.getElementById("drillNow");
+    if (dn) dn.onclick = () => drillLoop(missPairs);
+  };
+}
+
+/* ---------- ears round: sound FIRST, meaning from memory ---------- */
+function earsRound() {
+  const pool = allItems(true);
+  if (!pool.length) { location.hash = "home"; return; }
+  const queue = pool.sort(() => 0.5 - Math.random()).slice(0, 15);
+  app.innerHTML = `
+    <div class="top"><a class="crumb" href="#home">← Home</a><span class="tag">${queue.length} items ≈ 5 min</span></div>
+    <h1>🎧 Ears round</h1>
+    <p class="sub">The street won't show you subtitles. Play each row — no text — say the MEANING out loud, then tap to check. Mark ✗ what your ears missed.</p>
+    <div class="card">
+      <table><tbody id="tb">
+      ${queue.map((x, qi) => `<tr data-q="${qi}">
+        <td style="width:110px;white-space:nowrap">${spkBtn(x.key)}</td>
+        <td class="veiled"><span><span class="tr-cell" style="font-size:16.5px">${x.it.tr}</span> <span class="en-cell">= ${x.it.en}</span>${x.it.mn ? `<span class="mn">💡 ${x.it.mn}</span>` : ""}</span></td>
+        <td style="width:60px"><button class="small rowbtn">✗</button></td>
+      </tr>`).join("")}
+      </tbody></table>
+      <div class="exrow"><button class="primary" id="finish">✓ Done — only the marked ones fooled my ears</button></div>
+    </div>
+  `;
+  const tb = document.getElementById("tb");
+  const missed = new Set();
+  wireSpk(tb, k => { const p = queue.find(x => x.key === k); return p ? p.it.tr : ""; });
+  tb.querySelectorAll("tr").forEach(tr => {
+    const veil = tr.querySelector(".veiled");
+    tr.onclick = () => veil.classList.remove("veiled");
+    tr.querySelector(".rowbtn").onclick = (e) => {
+      e.stopPropagation(); veil.classList.remove("veiled");
+      const q = +tr.dataset.q, b = e.target;
+      if (missed.has(q)) { missed.delete(q); b.classList.remove("on"); b.textContent = "✗"; }
+      else { missed.add(q); b.classList.add("on"); b.textContent = "✗ missed"; }
+    };
+  });
+  document.getElementById("finish").onclick = () => {
+    queue.forEach((x, q) => markCard(x.key, missed.has(q)));
+    const missPairs = queue.filter((x, q) => missed.has(q)).map(x => ({ key: x.key, it: x.it }));
+    app.innerHTML = `
+      <div class="card" style="text-align:center;padding:30px 16px">
+        <div class="big">🎧 Ears round done — ${queue.length - missed.size}/${queue.length}</div>
+        <p class="sub" style="margin:8px 0 16px">${missed.size ? "Ear-misses matter most — drill them now." : "Your ears are ahead of schedule."}</p>
+        <div class="exrow" style="justify-content:center">
+          ${missPairs.length ? `<button class="primary" id="drillNow">🎯 Drill my ${missPairs.length} miss${missPairs.length > 1 ? "es" : ""} until clean</button>` : ""}
+          <a href="#home"><button ${missPairs.length ? "" : 'class="primary"'}>Home</button></a>
+        </div>
+      </div>`;
+    const dn = document.getElementById("drillNow");
+    if (dn) dn.onclick = () => drillLoop(missPairs);
+  };
+}
+
 /* ---------- offline: auto-download EVERYTHING on every visit ----------
    The SW precaches on install, but this belt-and-braces pass runs on every
    open/refresh: it checks each file (pages + all audio) is in the cache and
@@ -1517,8 +1917,10 @@ let trackConvDone = false;
 const OFF = { checked: 0, total: 0, failed: 0, done: false };
 function offlineFileList() {
   const files = ["index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
-  MODULES.forEach(m => m.items.forEach((_, i) => files.push(`audio/${m.id}-${i}.mp3`)));
-  CONVO.forEach((_, i) => files.push(`audio/conv-${i}.mp3`));
+  const both = f => { files.push(f, f.replace(".mp3", "-slow.mp3")); };
+  MODULES.forEach(m => m.items.forEach((_, i) => both(`audio/${m.id}-${i}.mp3`)));
+  CONVO.forEach((_, i) => both(`audio/conv-${i}.mp3`));
+  CORE31.forEach((_, i) => both(`audio/core-${i}.mp3`));
   return files;
 }
 function updateOffStatus() {
