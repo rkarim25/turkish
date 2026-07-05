@@ -4,7 +4,7 @@
    updates from the network; a new deploy is picked up one load later. This
    replaced network-first, which made every load wait on a network round-trip
    and felt slow on mobile. */
-const CACHE = "tk-v7";
+const CACHE = "tk-v8";
 const CORE = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png",
   "articles/culture.html", "articles/history.html"];
 // every item, conversation line and Core-31 sentence ships TWO mp3s (normal + slow) — all precached
@@ -28,7 +28,8 @@ self.addEventListener("fetch", e => {
   e.respondWith((async () => {
     const cached = await caches.match(e.request, { ignoreSearch: true });
     const refresh = fetch(e.request).then(res => {
-      if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(e.request, copy)); }
+      // cache ONLY full 200s — a 206 partial (media range request) would poison the cache
+      if (res.ok && res.status === 200) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(e.request, copy)); }
       return res;
     }).catch(() => null);
     if (cached) { e.waitUntil(refresh.then(() => {}).catch(() => {})); return cached; } // instant, refresh behind

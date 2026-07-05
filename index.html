@@ -1270,18 +1270,65 @@ function speak(t) {
 }
 let _cur = null;
 function stopAudio() { if (_cur) { _cur.onended = null; _cur.pause(); _cur = null; } }
+
+/* Reliable playback: clips are fetched once as blobs (no range requests, no
+   mid-play network), kept in memory, and every tap is token-guarded so a
+   newer tap always supersedes a loading older one — no dead presses. */
+const _blobs = new Map();
+let _playToken = 0;
+function audioPath(key, slow) { return "audio/" + key.replace(":", "-") + (slow ? "-slow" : "") + ".mp3"; }
+async function audioBlobUrl(path) {
+  if (_blobs.has(path)) return _blobs.get(path);
+  const r = await fetch(path);
+  if (!r.ok) throw new Error("audio " + r.status);
+  const u = URL.createObjectURL(await r.blob());
+  _blobs.set(path, u);
+  return u;
+}
 function playKey(key, tr, onend, slow) {
   stopAudio();
-  const a = new Audio("audio/" + key.replace(":", "-") + (slow ? "-slow" : "") + ".mp3");
-  _cur = a;
-  if (onend) a.onended = onend;
-  a.play().catch(() => { speak(tr); if (onend) setTimeout(onend, 1500); });
+  const token = ++_playToken;
+  audioBlobUrl(audioPath(key, slow))
+    .then(u => {
+      if (token !== _playToken) return; // a newer tap took over
+      const a = new Audio(u);
+      _cur = a;
+      if (onend) a.onended = onend;
+      return a.play();
+    })
+    .catch(() => {
+      if (token !== _playToken) return;
+      speak(tr); // last-resort fallback: device TTS
+      if (onend) setTimeout(onend, 1500);
+    });
 }
+/* warm the current screen's clips into memory so first taps are instant */
+function warmAudio() {
+  const keys = [...new Set([...document.querySelectorAll("[data-key]")].map(b => b.dataset.key))];
+  let i = 0;
+  (function next() {
+    if (i >= keys.length) return;
+    const k = keys[i++];
+    Promise.allSettled([audioBlobUrl(audioPath(k, false)), audioBlobUrl(audioPath(k, true))]).then(() => setTimeout(next, 40));
+  })();
+}
+/* iOS unlocks media playback on the first real gesture — prime it once */
+let _audioUnlocked = false;
+document.addEventListener("pointerdown", function unlock() {
+  if (_audioUnlocked) return;
+  _audioUnlocked = true;
+  const a = new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=");
+  a.play().catch(() => {});
+  document.removeEventListener("pointerdown", unlock);
+});
+
 /* every word gets two speeds: 🔊 normal, 🐢 slow — syllable by syllable */
 const spkBtn = key => `<button class="small spk" data-key="${key}">🔊</button><button class="small spk" data-key="${key}" data-slow="1" title="slow">🐢</button>`;
 function wireSpk(root, lookup) {
   root.querySelectorAll(".spk").forEach(b => b.onclick = e => {
     e.stopPropagation();
+    b.style.opacity = ".35"; // visible "tap registered" feedback while the clip spins up
+    setTimeout(() => { b.style.opacity = ""; }, 350);
     playKey(b.dataset.key, lookup ? lookup(b.dataset.key) : "", null, b.dataset.slow);
   });
 }
@@ -1292,6 +1339,7 @@ window.addEventListener("hashchange", render);
 function render() {
   const h = location.hash.slice(1) || "home";
   window.scrollTo({ top: 0 });
+  setTimeout(warmAudio, 400); // preload this screen's clips so first taps are instant
   if (h === "home") return home();
   if (h === "review") return review();
   if (h === "final") return finalCheck();
