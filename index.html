@@ -246,7 +246,10 @@ function allItems(onlyDone) {
   return out;
 }
 
-/* ---------- TTS (bonus when a Turkish voice exists; site never depends on it) ---------- */
+/* ---------- audio: recorded native speech, shipped with the site ----------
+   Every item has a pre-generated mp3 (Microsoft neural Turkish voice) in
+   audio/, precached by the service worker — audio works OFFLINE on any
+   device. Browser TTS is only the emergency fallback. */
 let _trVoice = null;
 function loadVoices() {
   const vs = window.speechSynthesis ? speechSynthesis.getVoices() : [];
@@ -260,9 +263,21 @@ function speak(t) {
   u.voice = _trVoice; u.lang = _trVoice.lang; u.rate = 0.85;
   speechSynthesis.speak(u);
 }
-const spkBtn = t => _trVoice ? `<button class="small spk" data-t="${t.replace(/"/g, "&quot;")}">🔊</button>` : "";
-function wireSpk(root) {
-  root.querySelectorAll(".spk").forEach(b => b.onclick = e => { e.stopPropagation(); speak(b.dataset.t); });
+let _cur = null;
+function stopAudio() { if (_cur) { _cur.onended = null; _cur.pause(); _cur = null; } }
+function playKey(key, tr, onend) {
+  stopAudio();
+  const a = new Audio("audio/" + key.replace(":", "-") + ".mp3");
+  _cur = a;
+  if (onend) a.onended = onend;
+  a.play().catch(() => { speak(tr); if (onend) setTimeout(onend, 1500); });
+}
+const spkBtn = key => `<button class="small spk" data-key="${key}">🔊</button>`;
+function wireSpk(root, lookup) {
+  root.querySelectorAll(".spk").forEach(b => b.onclick = e => {
+    e.stopPropagation();
+    playKey(b.dataset.key, lookup ? lookup(b.dataset.key) : "");
+  });
 }
 
 /* ---------- routing ---------- */
@@ -319,7 +334,7 @@ function home() {
     </div>
     <a class="mod" href="#all"><span class="ico">📋</span><span><span class="t">Cheat sheet</span><br>
       <span class="m">every phrase in one searchable table — for use in Turkey</span></span></a>
-    <p class="sub" style="margin-top:16px">💡 Tip: open this page once while online and it installs itself for offline use ("Add to Home Screen" makes it an app). ${_trVoice ? "🔊 buttons use this device's Turkish voice." : "This device has no Turkish voice, so audio buttons are hidden — the pronunciation column has you covered."}</p>
+    <p class="sub" style="margin-top:16px">💡 Tip: open this page once while online and it installs itself — including all 🔊 audio (recorded native Turkish speech) — for full offline use. "Add to Home Screen" makes it an app. Tap any row in a test to hear the answer.</p>
   `;
 }
 
@@ -331,19 +346,38 @@ function study(m) {
     <h1>${m.ico} ${m.title}</h1>
     <p class="sub">${m.intro}</p>
     <div class="card">
-      <table><thead><tr><th>Turkish</th><th>say it</th><th>meaning</th></tr></thead><tbody>
-      ${m.items.map(it => `<tr>
-        <td class="tr-cell">${it.tr} ${spkBtn(it.tr)}</td>
+      <div class="exrow" style="margin:0 0 10px">
+        <button id="playAll">▶ Play all — listen through once</button>
+        <button class="small" id="stopAll">■</button>
+      </div>
+      <table><thead><tr><th>Turkish</th><th>say it</th><th>meaning</th></tr></thead><tbody id="sb">
+      ${m.items.map((it, ii) => `<tr data-i="${ii}">
+        <td class="tr-cell">${it.tr} ${spkBtn(m.id + ":" + ii)}</td>
         <td class="say">${it.say || ""}</td>
         <td class="en-cell">${it.en}${it.note ? `<span class="note">${it.note}</span>` : ""}</td>
       </tr>`).join("")}
       </tbody></table>
       <div class="exrow">
-        <a href="#t/${m.id}"><button class="primary">I've read them aloud — test me →</button></a>
+        <a href="#t/${m.id}"><button class="primary">I've said them aloud — test me →</button></a>
       </div>
     </div>
   `;
-  wireSpk(app);
+  wireSpk(app, key => m.items[+key.split(":")[1]].tr);
+  const sb = document.getElementById("sb");
+  const rowsEls = [...sb.querySelectorAll("tr")];
+  function highlight(i) { rowsEls.forEach((r, ri) => r.style.background = ri === i ? "var(--red-soft)" : ""); }
+  document.getElementById("playAll").onclick = () => {
+    let i = 0;
+    const next = () => {
+      if (i >= m.items.length) { highlight(-1); return; }
+      highlight(i);
+      rowsEls[i].scrollIntoView({ block: "center", behavior: "smooth" });
+      const cur = i; i++;
+      playKey(m.id + ":" + cur, m.items[cur].tr, () => setTimeout(next, 500));
+    };
+    next();
+  };
+  document.getElementById("stopAll").onclick = () => { stopAudio(); highlight(-1); };
 }
 
 /* ---------- module test: recall-then-reveal, mark only misses ---------- */
@@ -371,7 +405,7 @@ function test(m) {
   const missed = new Set();
   tb.querySelectorAll("tr").forEach(tr => {
     const veil = tr.querySelector(".veiled");
-    tr.onclick = () => { veil.classList.remove("veiled"); if (_trVoice) speak(m.items[+tr.dataset.i].tr); };
+    tr.onclick = () => { veil.classList.remove("veiled"); const i = +tr.dataset.i; playKey(m.id + ":" + i, m.items[i].tr); };
     tr.querySelector(".rowbtn").onclick = (e) => {
       e.stopPropagation();
       veil.classList.remove("veiled");
@@ -430,7 +464,7 @@ function review() {
   const byKey = Object.fromEntries(queue.map(x => [x.key, x]));
   tb.querySelectorAll("tr").forEach(tr => {
     const veil = tr.querySelector(".veiled");
-    tr.onclick = () => { veil.classList.remove("veiled"); if (_trVoice) speak(byKey[tr.dataset.k].it.tr); };
+    tr.onclick = () => { veil.classList.remove("veiled"); playKey(tr.dataset.k, byKey[tr.dataset.k].it.tr); };
     tr.querySelector(".rowbtn").onclick = (e) => {
       e.stopPropagation(); veil.classList.remove("veiled");
       const k = tr.dataset.k, b = tr.querySelector(".rowbtn");
@@ -483,9 +517,10 @@ function finalCheck() {
         if (opts[+x.dataset.i].key === q.key) x.classList.add("ok");
       });
       if (!ok) b.classList.add("no");
+      playKey(q.key, q.it.tr);
       document.getElementById("fb").innerHTML = `${ok ? "✓" : "✗"} <strong>${q.it.tr}</strong> = ${q.it.en} <span class="say">${q.it.say || ""}</span>`;
       pos++;
-      setTimeout(ask, ok ? 900 : 2400);
+      setTimeout(ask, ok ? 1300 : 2600);
     });
   }
   function finish() {
@@ -516,17 +551,18 @@ function cheatSheet() {
   `;
   const tb = document.getElementById("tb");
   const rows = [];
-  MODULES.forEach(m => m.items.forEach(it => rows.push({ m, it })));
+  MODULES.forEach(m => m.items.forEach((it, ii) => rows.push({ m, it, key: m.id + ":" + ii })));
+  const trOf = Object.fromEntries(rows.map(r => [r.key, r.it.tr]));
   function draw(f) {
     const ff = (f || "").toLowerCase();
     tb.innerHTML = rows.filter(({ m, it }) =>
       !ff || (it.tr + " " + it.en + " " + (it.say || "") + " " + (it.note || "") + " " + m.title).toLowerCase().includes(ff)
-    ).map(({ m, it }) => `<tr>
-      <td class="tr-cell" style="font-size:16.5px">${it.tr} ${spkBtn(it.tr)}</td>
+    ).map(({ m, it, key }) => `<tr>
+      <td class="tr-cell" style="font-size:16.5px">${it.tr} ${spkBtn(key)}</td>
       <td><span class="say">${it.say || ""}</span></td>
       <td class="en-cell">${it.en}${it.note ? `<span class="note">${it.note}</span>` : ""}<span class="note">${m.ico} ${m.title}</span></td>
     </tr>`).join("") || `<tr><td colspan="3" style="color:var(--muted)">nothing matches</td></tr>`;
-    wireSpk(tb);
+    wireSpk(tb, k => trOf[k]);
   }
   draw("");
   document.getElementById("q").oninput = e => draw(e.target.value);
