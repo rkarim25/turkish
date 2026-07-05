@@ -1,6 +1,6 @@
 /* Offline-first for a plane: everything the site needs is precached on first
    visit. Network-first when online (never stale), cache fallback when not. */
-const CACHE = "tk-v4";
+const CACHE = "tk-v5";
 const CORE = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
 // every item, conversation line and Core-31 sentence ships TWO mp3s (normal + slow) — all precached
 const MODS = [["sounds", 10], ["polite", 15], ["survive", 12], ["numbers", 15], ["taxi", 12], ["hotel", 10], ["food", 14], ["work", 12], ["magic", 8], ["conv", 26], ["core", 31]];
