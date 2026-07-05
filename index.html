@@ -38,6 +38,11 @@
   .say { color: var(--amber); font-size: 13.5px; font-style: italic; }
   .en-cell { font-size: 15px; }
   .note { color: var(--muted); font-size: 13px; display: block; margin-top: 2px; }
+  .parts { color: #3d6b84; font-size: 13px; display: block; margin-top: 2px; }
+  .mn { color: #7b4fa6; font-size: 13px; display: block; margin-top: 2px; }
+  .who { display: inline-block; font-size: 12px; font-weight: 700; color: var(--muted); min-width: 92px; }
+  .cline { padding: 10px 8px; border-bottom: 1px dashed var(--border); }
+  .cline.you { background: #fdf6f6; border-left: 3px solid var(--red); border-radius: 6px; }
   .veiled > span { visibility: hidden; }
   .veiled { background: #f3ede4; border-radius: 8px; cursor: pointer; }
   .rowbtn { border-color: var(--red); color: var(--red); }
@@ -76,150 +81,927 @@
    ============================================================ */
 
 const MODULES = [
-{ id:"sounds", ico:"🔤", title:"Read Turkish in 8 minutes", min:8,
-  intro:"Turkish is 100% phonetic — every letter always makes the same sound, so 8 minutes here unlocks every sign, menu and name in the country. Stress almost always falls on the LAST syllable. These are the only letters that differ from English:",
-  items:[
-   {tr:"c", en:"sounds like J in “jam”", say:"cadde (street) = JAD-deh", note:"the biggest trap — Turkish c is never like English c"},
-   {tr:"ç", en:"sounds like CH in “chat”", say:"çay (tea) = chai"},
-   {tr:"ş", en:"sounds like SH in “shop”", say:"şeker (sugar) = sheh-KER"},
-   {tr:"ğ", en:"silent — just stretches the vowel before it", say:"dağ (mountain) = daa"},
-   {tr:"ı", en:"dotless i — “uh”, like the a in “about”", say:"kapı (door) = kah-PUH", note:"ı and i are different letters: sıcak (hot) = suh-JAHK"},
-   {tr:"i", en:"“ee”, like in “see”", say:"bir (one) = beer"},
-   {tr:"ö", en:"like the u in “fur” (German ö)", say:"dört (four) = durt"},
-   {tr:"ü", en:"“ew” with rounded lips (French u)", say:"üç (three) = ewch"},
-   {tr:"o / u / e / a", en:"always pure: o as in “more”, u as “oo”, e as “eh”, a as “ah”", say:"otel = oh-TEL"},
-   {tr:"j", en:"like the s in “measure” (rare)", say:"garaj = gah-RAZH"},
-  ]},
-{ id:"polite", ico:"🤝", title:"The politeness pack", min:15,
-  intro:"Turks are warm and formal at first meeting. These 15 phrases do 80% of your social work — say every one out loud.",
-  items:[
-   {tr:"Merhaba", en:"hello", say:"mer-hah-BAH"},
-   {tr:"Günaydın", en:"good morning", say:"gew-nigh-DUHN"},
-   {tr:"İyi günler", en:"good day (greeting or leaving a shop)", say:"ee GEWN-ler"},
-   {tr:"İyi akşamlar", en:"good evening", say:"ee ahk-sham-LAR"},
-   {tr:"Hoş geldiniz", en:"welcome (said to you)", say:"hosh GEL-di-niz", note:"the fixed reply is Hoş bulduk"},
-   {tr:"Hoş bulduk", en:"reply to “welcome”", say:"hosh bool-DOOK"},
-   {tr:"Evet / Hayır", en:"yes / no", say:"eh-VET / HAH-yuhr"},
-   {tr:"Tamam", en:"OK", say:"tah-MAHM"},
-   {tr:"Lütfen", en:"please", say:"LEWT-fen"},
-   {tr:"Teşekkür ederim", en:"thank you", say:"teh-shek-KEWR eh-deh-reem", note:"casual: Teşekkürler, or Sağ ol(un)"},
-   {tr:"Rica ederim", en:"you're welcome", say:"ree-JAH eh-deh-reem"},
-   {tr:"Pardon", en:"excuse me / sorry (bumping past)", say:"par-DON"},
-   {tr:"Özür dilerim", en:"I'm sorry (apology)", say:"uh-ZEWR dee-leh-reem"},
-   {tr:"Memnun oldum", en:"pleased to meet you", say:"mem-NOON ol-DOOM", note:"reply: Ben de (me too) = ben DEH"},
-   {tr:"Görüşürüz", en:"see you later", say:"gur-rew-shew-REWZ"},
-  ]},
-{ id:"survive", ico:"🛟", title:"Survival phrases", min:14,
-  intro:"The phrases that rescue every conversation that goes beyond your Turkish.",
-  items:[
-   {tr:"Türkçe bilmiyorum", en:"I don't speak Turkish", say:"TEWRK-cheh BIL-mee-yoh-room"},
-   {tr:"İngilizce biliyor musunuz?", en:"do you speak English?", say:"in-gee-LEEZ-jeh bee-lee-YOR moo-soo-nooz"},
-   {tr:"Anlamadım", en:"I didn't understand", say:"ahn-LAH-mah-duhm"},
-   {tr:"Yavaş, lütfen", en:"slowly, please", say:"yah-VAHSH LEWT-fen"},
-   {tr:"Tekrar söyler misiniz?", en:"could you say that again?", say:"tek-RAR suy-LER mee-see-neez"},
-   {tr:"… nerede?", en:"where is …?", say:"NEH-reh-deh", note:"Tuvalet nerede? = where is the toilet?"},
-   {tr:"Tuvalet nerede?", en:"where is the toilet?", say:"too-vah-LET NEH-reh-deh"},
-   {tr:"Yardım eder misiniz?", en:"could you help me?", say:"yar-DUHM eh-DER mee-see-neez"},
-   {tr:"Sorun değil", en:"no problem", say:"soh-ROON deh-EEL"},
-   {tr:"Bilmiyorum", en:"I don't know", say:"BIL-mee-yoh-room"},
-   {tr:"Bakar mısınız?", en:"excuse me! (calling waiter / staff)", say:"bah-KAR muh-suh-nuhz", note:"literally “would you look?” — THE way to get attention politely"},
-   {tr:"Buyurun", en:"“here you are / go ahead / how can I help?”", say:"BOO-yoo-roon", note:"you'll hear this constantly — it's an all-purpose “please, go ahead”"},
-  ]},
-{ id:"numbers", ico:"💸", title:"Numbers & money", min:16,
-  intro:"Ten numbers + four tens = every price in Turkey (they stack: yirmi beş = 25). Then the money phrases — including the receipt you need for expenses.",
-  items:[
-   {tr:"bir, iki, üç", en:"1, 2, 3", say:"beer, ee-KEE, ewch"},
-   {tr:"dört, beş, altı", en:"4, 5, 6", say:"durt, besh, ahl-TUH"},
-   {tr:"yedi, sekiz, dokuz", en:"7, 8, 9", say:"yeh-DEE, seh-KEEZ, doh-KOOZ"},
-   {tr:"on", en:"10", say:"ohn", note:"on bir = 11, on iki = 12…"},
-   {tr:"yirmi, otuz, kırk, elli", en:"20, 30, 40, 50", say:"yeer-MEE, oh-TOOZ, kuhrk, el-LEE", note:"yirmi beş = 25, kırk iki = 42"},
-   {tr:"yüz / bin", en:"100 / 1000", say:"yewz / been", note:"iki yüz elli = 250"},
-   {tr:"lira", en:"lira (₺)", say:"LEE-rah"},
-   {tr:"Ne kadar?", en:"how much?", say:"neh kah-DAR"},
-   {tr:"Kaç lira?", en:"how many lira?", say:"kach LEE-rah"},
-   {tr:"Hesap, lütfen", en:"the bill, please", say:"heh-SAHP LEWT-fen"},
-   {tr:"Kart geçer mi?", en:"do you take card?", say:"kart geh-CHER mee"},
-   {tr:"nakit", en:"cash", say:"nah-KEET"},
-   {tr:"Fatura alabilir miyim?", en:"can I get an invoice? (for expenses!)", say:"fah-too-RAH ah-lah-bee-LEER mee-yim", note:"fiş = simple receipt; fatura = proper invoice with tax number"},
-   {tr:"pahalı / ucuz", en:"expensive / cheap", say:"pah-hah-LUH / oo-JOOZ"},
-   {tr:"para üstü", en:"change (money back)", say:"pah-RAH ews-tew"},
-  ]},
-{ id:"taxi", ico:"🚕", title:"Taxi & getting around", min:14,
-  intro:"Istanbul taxis: make sure the meter (taksimetre) is running. Say the destination + lütfen and you're moving.",
-  items:[
-   {tr:"Nereye?", en:"“where to?” (what the driver asks you)", say:"NEH-reh-yeh"},
-   {tr:"[Taksim]'e lütfen", en:"to [Taksim], please", say:"tahk-SEE-meh LEWT-fen", note:"place name + -e/-a = “to” — [Otel]e lütfen works everywhere"},
-   {tr:"havalimanı", en:"airport", say:"hah-vah-lee-mah-NUH"},
-   {tr:"otel", en:"hotel", say:"oh-TEL"},
-   {tr:"sağ / sol", en:"right / left", say:"saa / sohl"},
-   {tr:"düz", en:"straight ahead", say:"dewz", note:"düz gidin = go straight"},
-   {tr:"Burada durun, lütfen", en:"stop here, please", say:"boo-RAH-dah doo-ROON"},
-   {tr:"Ne kadar sürer?", en:"how long does it take?", say:"neh kah-DAR sew-RER"},
-   {tr:"uzak / yakın", en:"far / near", say:"oo-ZAHK / yah-KUHN"},
-   {tr:"metro / otobüs / tramvay", en:"metro / bus / tram", say:"met-ROH / oh-toh-BEWS / trahm-VIGH", note:"in Istanbul buy an İstanbulkart — one card for all of them"},
-   {tr:"durak", en:"(bus/tram) stop", say:"doo-RAHK"},
-   {tr:"Taksimetre açık mı?", en:"is the meter on?", say:"tahk-see-MET-reh ah-CHUHK muh"},
-  ]},
-{ id:"hotel", ico:"🏨", title:"Hotel", min:12,
-  intro:"Check-in to check-out in ten phrases. “Rezervasyonum var” uses the magic word var (there is) — module 9 makes it click.",
-  items:[
-   {tr:"Rezervasyonum var", en:"I have a reservation", say:"reh-zer-vahs-YOH-noom VAR"},
-   {tr:"oda", en:"room", say:"oh-DAH"},
-   {tr:"anahtar", en:"key", say:"ah-nah-TAR"},
-   {tr:"Kahvaltı saat kaçta?", en:"what time is breakfast?", say:"kah-vahl-TUH saht kach-TAH"},
-   {tr:"Wi-Fi şifresi ne?", en:"what's the Wi-Fi password?", say:"wifi shif-reh-SEE neh"},
-   {tr:"Çıkış saat kaçta?", en:"what time is checkout?", say:"chuh-KUHSH saht kach-TAH"},
-   {tr:"klima", en:"air conditioning", say:"KLEE-mah"},
-   {tr:"asansör", en:"elevator", say:"ah-sahn-SUR"},
-   {tr:"Fatura, lütfen", en:"the invoice, please (checkout — expenses!)", say:"fah-too-RAH LEWT-fen"},
-   {tr:"Saat kaç?", en:"what time is it?", say:"saht KACH", note:"saat kaç = what time IS it; saat kaçta = AT what time"},
-  ]},
-{ id:"food", ico:"🍢", title:"Eating & tea culture", min:15,
-  intro:"Food is half the trip. Rule one: when offered çay, accept it — refusing tea is refusing friendship. Rule two: you'll hear “Afiyet olsun” at every meal.",
-  items:[
-   {tr:"Afiyet olsun", en:"bon appétit (said to you — reply: teşekkürler)", say:"ah-fee-YET ol-SOON"},
-   {tr:"Elinize sağlık", en:"“health to your hands” — compliment the cook", say:"eh-lee-nee-ZEH saa-LUHK", note:"say this after a good meal and watch the smile"},
-   {tr:"menü", en:"menu", say:"meh-NEW"},
-   {tr:"su / maden suyu", en:"water / sparkling water", say:"soo / mah-DEN soo-yoo"},
-   {tr:"çay", en:"tea (the national drink)", say:"chai", note:"served in tulip glasses, no milk, endless refills"},
-   {tr:"kahve / Türk kahvesi", en:"coffee / Turkish coffee", say:"kah-VEH / tewrk kah-veh-SEE"},
-   {tr:"Bir çay, lütfen", en:"one tea, please", say:"beer chai LEWT-fen"},
-   {tr:"et / tavuk / balık", en:"meat / chicken / fish", say:"et / tah-VOOK / bah-LUHK"},
-   {tr:"acı", en:"spicy", say:"ah-JUH", note:"acısız = not spicy (-sız/-siz = without)"},
-   {tr:"şekersiz", en:"without sugar", say:"sheh-ker-SEEZ", note:"-siz works everywhere: etsiz = meatless, buzsuz = no ice"},
-   {tr:"Alerjim var", en:"I have an allergy", say:"ah-ler-ZHEEM var", note:"fıstık alerjim var = I have a nut allergy"},
-   {tr:"Çok lezzetli", en:"very delicious", say:"chok lez-zet-LEE"},
-   {tr:"kahvaltı", en:"breakfast (a Turkish institution)", say:"kah-vahl-TUH"},
-   {tr:"Şerefe!", en:"cheers!", say:"sheh-reh-FEH"},
-  ]},
-{ id:"work", ico:"💼", title:"Business small talk & etiquette", min:15,
-  intro:"Address people as FirstName + Bey (men) or Hanım (women): Ahmet Bey, Ayşe Hanım — using it instantly marks you as someone who did their homework. Meetings start with tea and small talk; let your host set the pace.",
-  items:[
-   {tr:"Nasılsınız?", en:"how are you? (formal)", say:"nah-suhl-suh-NUHZ"},
-   {tr:"İyiyim, teşekkürler. Siz?", en:"I'm fine, thanks. And you?", say:"ee-YEE-yim teh-shek-kewr-LER. seez"},
-   {tr:"Ahmet Bey / Ayşe Hanım", en:"Mr Ahmet / Ms Ayşe (first name + title!)", say:"bey / hah-NUHM", note:"never surname + Bey — it's always the FIRST name"},
-   {tr:"toplantı", en:"meeting", say:"top-lahn-TUH"},
-   {tr:"bugün / yarın / şimdi", en:"today / tomorrow / now", say:"boo-GEWN / YAH-ruhn / SHIM-dee"},
-   {tr:"Saat kaçta?", en:"at what time?", say:"saht kach-TAH"},
-   {tr:"İyi çalışmalar", en:"“good work!” (leaving an office or shop)", say:"ee chah-luhsh-mah-LAR", note:"say it when leaving any workplace — universally appreciated"},
-   {tr:"Kolay gelsin", en:"“may it come easy” — to anyone working", say:"koh-LIGH GEL-sin", note:"the golden phrase: say it to taxi drivers, cleaners, clerks…"},
-   {tr:"İnşallah", en:"hopefully / God willing", say:"in-shal-LAH", note:"used constantly in Turkish, same as Arabic"},
-   {tr:"Maşallah", en:"“wonderful!” (admiration)", say:"mah-shal-LAH"},
-   {tr:"Elbette", en:"of course", say:"el-BET-teh"},
-   {tr:"Çok memnun oldum", en:"it was a great pleasure (leaving)", say:"chok mem-NOON ol-DOOM"},
-  ]},
-{ id:"magic", ico:"🪄", title:"5 magic patterns", min:11,
-  intro:"Turkish grammar for travelers in five moves. No gender, no articles, no verb tables — these patterns + pointing at things = functional Turkish.",
-  items:[
-   {tr:"var / yok", en:"there is / there isn't (the most useful pair in Turkish)", say:"var / yohk", note:"Çay var mı? — Var. / Yok.  Also possession: Rezervasyonum var."},
-   {tr:"… mı? / mi?", en:"turns anything into a question", say:"muh / mee", note:"Taksi mi? = is this a taxi? Açık mı? = is it open?"},
-   {tr:"[X] istiyorum", en:"I want [X] — point at anything and say it", say:"is-tee-YOH-room", note:"Su istiyorum. Bunu istiyorum = I want this one."},
-   {tr:"İstemiyorum", en:"I don't want (it)", say:"IS-teh-mee-yoh-room", note:"polite firm no to street sellers"},
-   {tr:"[X] nerede?", en:"where is [X]?", say:"NEH-reh-deh"},
-   {tr:"-de / -da", en:"in / at: otelde = at the hotel", say:"oteldeh", note:"havalimanında = at the airport"},
-   {tr:"-siz / -sız", en:"without: şekersiz, etsiz, buzsuz", say:"-seez", note:"your allergy/diet insurance"},
-   {tr:"bu / şu", en:"this / that (point and win)", say:"boo / shoo", note:"Bu ne? = what's this? Bunu istiyorum = I want this one."},
-  ]},
+ {
+  "id": "sounds",
+  "ico": "🔤",
+  "title": "Read Turkish in 8 minutes",
+  "min": 8,
+  "intro": "Turkish is 100% phonetic — every letter always makes the same sound, so 8 minutes here unlocks every sign, menu and name in the country. Stress almost always falls on the LAST syllable. These are the only letters that differ from English:",
+  "items": [
+   {
+    "tr": "c",
+    "en": "sounds like J in “jam”",
+    "say": "cadde (street) = JAD-deh",
+    "note": "the biggest trap — Turkish c is never like English c"
+   },
+   {
+    "tr": "ç",
+    "en": "sounds like CH in “chat”",
+    "say": "çay (tea) = chai"
+   },
+   {
+    "tr": "ş",
+    "en": "sounds like SH in “shop”",
+    "say": "şeker (sugar) = sheh-KER"
+   },
+   {
+    "tr": "ğ",
+    "en": "silent — just stretches the vowel before it",
+    "say": "dağ (mountain) = daa"
+   },
+   {
+    "tr": "ı",
+    "en": "dotless i — “uh”, like the a in “about”",
+    "say": "kapı (door) = kah-PUH",
+    "note": "ı and i are different letters: sıcak (hot) = suh-JAHK"
+   },
+   {
+    "tr": "i",
+    "en": "“ee”, like in “see”",
+    "say": "bir (one) = beer"
+   },
+   {
+    "tr": "ö",
+    "en": "like the u in “fur” (German ö)",
+    "say": "dört (four) = durt"
+   },
+   {
+    "tr": "ü",
+    "en": "“ew” with rounded lips (French u)",
+    "say": "üç (three) = ewch"
+   },
+   {
+    "tr": "o / u / e / a",
+    "en": "always pure: o as in “more”, u as “oo”, e as “eh”, a as “ah”",
+    "say": "otel = oh-TEL"
+   },
+   {
+    "tr": "j",
+    "en": "like the s in “measure” (rare)",
+    "say": "garaj = gah-RAZH"
+   }
+  ]
+ },
+ {
+  "id": "polite",
+  "ico": "🤝",
+  "title": "The politeness pack",
+  "min": 15,
+  "intro": "Turks are warm and formal at first meeting. These 15 phrases do 80% of your social work — say every one out loud.",
+  "items": [
+   {
+    "tr": "Merhaba",
+    "en": "hello",
+    "say": "mer-hah-BAH",
+    "mn": "from Arabic مرحبا — you already own this word"
+   },
+   {
+    "tr": "Günaydın",
+    "en": "good morning",
+    "say": "gew-nigh-DUHN",
+    "parts": "gün = day · aydın = bright → “day-bright!”"
+   },
+   {
+    "tr": "İyi günler",
+    "en": "good day (greeting or leaving a shop)",
+    "say": "ee GEWN-ler",
+    "parts": "iyi = good · gün-ler = day-s (-ler makes plurals) → “good days!”"
+   },
+   {
+    "tr": "İyi akşamlar",
+    "en": "good evening",
+    "say": "ee ahk-sham-LAR",
+    "parts": "iyi = good · akşam-lar = evening-s"
+   },
+   {
+    "tr": "Hoş geldiniz",
+    "en": "welcome (said to you)",
+    "say": "hosh GEL-di-niz",
+    "note": "the fixed reply is Hoş bulduk",
+    "parts": "hoş = pleasant · gel-diniz = came-you → “you came pleasantly”"
+   },
+   {
+    "tr": "Hoş bulduk",
+    "en": "reply to “welcome”",
+    "say": "hosh bool-DOOK",
+    "parts": "hoş = pleasant · bul-duk = found-we → “we found it pleasant”"
+   },
+   {
+    "tr": "Evet / Hayır",
+    "en": "yes / no",
+    "say": "eh-VET / HAH-yuhr",
+    "mn": "the VET says YES to every animal · “a HIGHER salary?” — NO"
+   },
+   {
+    "tr": "Tamam",
+    "en": "OK",
+    "say": "tah-MAHM",
+    "mn": "“Ta, Mam — OK!”"
+   },
+   {
+    "tr": "Lütfen",
+    "en": "please",
+    "say": "LEWT-fen",
+    "mn": "a LUTE FAN begs: “please, one more song!”"
+   },
+   {
+    "tr": "Teşekkür ederim",
+    "en": "thank you",
+    "say": "teh-shek-KEWR eh-deh-reem",
+    "note": "casual: Teşekkürler, or Sağ ol(un)",
+    "parts": "teşekkür = thanks (Arabic شكر — your Quran-core word!) · ederim = I-do → “I do thanks”",
+    "mn": "sounds like “tea, sugar, dream” — dreaming of sweet tea to say thanks"
+   },
+   {
+    "tr": "Rica ederim",
+    "en": "you're welcome",
+    "say": "ree-JAH eh-deh-reem",
+    "parts": "rica = request (Arabic رجاء) · ederim = I-do → “I do the request” = my pleasure"
+   },
+   {
+    "tr": "Pardon",
+    "en": "excuse me / sorry (bumping past)",
+    "say": "par-DON"
+   },
+   {
+    "tr": "Özür dilerim",
+    "en": "I'm sorry (apology)",
+    "say": "uh-ZEWR dee-leh-reem",
+    "parts": "özür = excuse (Arabic عذر) · dilerim = I-wish → “I wish an excuse”"
+   },
+   {
+    "tr": "Memnun oldum",
+    "en": "pleased to meet you",
+    "say": "mem-NOON ol-DOOM",
+    "note": "reply: Ben de (me too) = ben DEH",
+    "parts": "memnun = pleased (Arabic ممنون) · oldum = I-became → “I became pleased”"
+   },
+   {
+    "tr": "Görüşürüz",
+    "en": "see you later",
+    "say": "gur-rew-shew-REWZ",
+    "parts": "görüş = see-each-other · -ürüz = we-will → “we'll see each other”"
+   }
+  ]
+ },
+ {
+  "id": "survive",
+  "ico": "🛟",
+  "title": "Survival phrases",
+  "min": 14,
+  "intro": "The phrases that rescue every conversation that goes beyond your Turkish.",
+  "items": [
+   {
+    "tr": "Türkçe bilmiyorum",
+    "en": "I don't speak Turkish",
+    "say": "TEWRK-cheh BIL-mee-yoh-room",
+    "parts": "Türk-çe = Turkish (-çe = language of) · bil-mi-yor-um = know-NOT-ing-I — one word carries a whole sentence"
+   },
+   {
+    "tr": "İngilizce biliyor musunuz?",
+    "en": "do you speak English?",
+    "say": "in-gee-LEEZ-jeh bee-lee-YOR moo-soo-nooz",
+    "parts": "İngiliz-ce = English · biliyor musunuz = know do-you? → “English know-you?”"
+   },
+   {
+    "tr": "Anlamadım",
+    "en": "I didn't understand",
+    "say": "ahn-LAH-mah-duhm",
+    "parts": "anla = understand · -ma = not · -dım = I-did → “I did-not-understand”",
+    "mn": "AN-LLAMA-DIM: a very DIM LLAMA that understands nothing"
+   },
+   {
+    "tr": "Yavaş, lütfen",
+    "en": "slowly, please",
+    "say": "yah-VAHSH LEWT-fen",
+    "mn": "“ya WASH slowly” — washing in slow motion"
+   },
+   {
+    "tr": "Tekrar söyler misiniz?",
+    "en": "could you say that again?",
+    "say": "tek-RAR suy-LER mee-see-neez",
+    "parts": "tekrar = again (Arabic تكرار) · söyler misiniz = say would-you?",
+    "mn": "the film director yells “TAKE-RAR!” — again, take two!"
+   },
+   {
+    "tr": "… nerede?",
+    "en": "where is …?",
+    "say": "NEH-reh-deh",
+    "note": "Tuvalet nerede? = where is the toilet?",
+    "parts": "nere = where · -de = at → “at-where?”"
+   },
+   {
+    "tr": "Tuvalet nerede?",
+    "en": "where is the toilet?",
+    "say": "too-vah-LET NEH-reh-deh"
+   },
+   {
+    "tr": "Yardım eder misiniz?",
+    "en": "could you help me?",
+    "say": "yar-DUHM eh-DER mee-see-neez",
+    "parts": "yardım = help · eder misiniz = do would-you?",
+    "mn": "someone lost in a dim YARD at DIM dusk shouting HELP"
+   },
+   {
+    "tr": "Sorun değil",
+    "en": "no problem",
+    "say": "soh-ROON deh-EEL",
+    "parts": "sorun = problem · değil = is-not"
+   },
+   {
+    "tr": "Bilmiyorum",
+    "en": "I don't know",
+    "say": "BIL-mee-yoh-room",
+    "parts": "bil-mi-yor-um = know-NOT-ing-I",
+    "mn": "“BILL MY ROOM? …I don't know!”"
+   },
+   {
+    "tr": "Bakar mısınız?",
+    "en": "excuse me! (calling waiter / staff)",
+    "say": "bah-KAR muh-suh-nuhz",
+    "note": "literally “would you look?” — THE way to get attention politely",
+    "parts": "bakar = (one who) looks · mısınız = would-you? → “would you look?”"
+   },
+   {
+    "tr": "Buyurun",
+    "en": "“here you are / go ahead / how can I help?”",
+    "say": "BOO-yoo-roon",
+    "note": "you'll hear this constantly — it's an all-purpose “please, go ahead”",
+    "mn": "the waiter slams down the tray: “BOO-YAH!” — here you are!"
+   }
+  ]
+ },
+ {
+  "id": "numbers",
+  "ico": "💸",
+  "title": "Numbers & money",
+  "min": 16,
+  "intro": "Ten numbers + four tens = every price in Turkey (they stack: yirmi beş = 25). Then the money phrases — including the receipt you need for expenses.",
+  "items": [
+   {
+    "tr": "bir, iki, üç",
+    "en": "1, 2, 3",
+    "say": "beer, ee-KEE, ewch",
+    "mn": "one BEER · two KEYS (ee-KEE) · “OOCH!” — three squeezed on one bench"
+   },
+   {
+    "tr": "dört, beş, altı",
+    "en": "4, 5, 6",
+    "say": "durt, besh, ahl-TUH",
+    "mn": "FOUR DOORs on a car · high-five your BESH-tie (5) · six ALTOs in the choir"
+   },
+   {
+    "tr": "yedi, sekiz, dokuz",
+    "en": "7, 8, 9",
+    "say": "yeh-DEE, seh-KEEZ, doh-KOOZ",
+    "mn": "the YETI turns 7 · the octopus (8 arms) blows a SEA-KISS · nine ships DOCK in OOZE"
+   },
+   {
+    "tr": "on",
+    "en": "10",
+    "say": "ohn",
+    "note": "on bir = 11, on iki = 12…",
+    "mn": "10/10 — spot ON"
+   },
+   {
+    "tr": "yirmi, otuz, kırk, elli",
+    "en": "20, 30, 40, 50",
+    "say": "yeer-MEE, oh-TOOZ, kuhrk, el-LEE",
+    "note": "yirmi beş = 25, kırk iki = 42",
+    "mn": "“YER owe ME 20!” · OH-TOEZ: 30 toes · Captain KIRK turns 40 · ELLIe turns 50"
+   },
+   {
+    "tr": "yüz / bin",
+    "en": "100 / 1000",
+    "say": "yewz / been",
+    "note": "iki yüz elli = 250",
+    "mn": "yüz also means “face” — a face worth 100 · a BIN stuffed with 1,000 lira"
+   },
+   {
+    "tr": "lira",
+    "en": "lira (₺)",
+    "say": "LEE-rah"
+   },
+   {
+    "tr": "Ne kadar?",
+    "en": "how much?",
+    "say": "neh kah-DAR",
+    "parts": "ne = what · kadar = amount (Arabic قدر) → “what amount?”"
+   },
+   {
+    "tr": "Kaç lira?",
+    "en": "how many lira?",
+    "say": "kach LEE-rah",
+    "mn": "“how many did you CATCH?” — kaç = how many"
+   },
+   {
+    "tr": "Hesap, lütfen",
+    "en": "the bill, please",
+    "say": "heh-SAHP LEWT-fen",
+    "parts": "hesap = bill/account — Arabic حساب AND Bengali হিসাব (hishab), the same word in all three!"
+   },
+   {
+    "tr": "Kart geçer mi?",
+    "en": "do you take card?",
+    "say": "kart geh-CHER mee",
+    "parts": "kart = card · geç-er = pass-es · mi? → “card passes?”"
+   },
+   {
+    "tr": "nakit",
+    "en": "cash",
+    "say": "nah-KEET",
+    "parts": "from Arabic نقد",
+    "mn": "a NAKED wallet needs cash"
+   },
+   {
+    "tr": "Fatura alabilir miyim?",
+    "en": "can I get an invoice? (for expenses!)",
+    "say": "fah-too-RAH ah-lah-bee-LEER mee-yim",
+    "note": "fiş = simple receipt; fatura = proper invoice with tax number",
+    "parts": "fatura = invoice · al-abilir mi-yim = take-CAN ?-I → “can-I-take an invoice?”"
+   },
+   {
+    "tr": "pahalı / ucuz",
+    "en": "expensive / cheap",
+    "say": "pah-hah-LUH / oo-JOOZ",
+    "mn": "“PA! HA! LOOK at that price!” · cheap JUICE = oo-JOOZ"
+   },
+   {
+    "tr": "para üstü",
+    "en": "change (money back)",
+    "say": "pah-RAH ews-tew",
+    "parts": "para = money · üstü = its-top → “the money's overflow” = your change"
+   }
+  ]
+ },
+ {
+  "id": "taxi",
+  "ico": "🚕",
+  "title": "Taxi & getting around",
+  "min": 14,
+  "intro": "Istanbul taxis: make sure the meter (taksimetre) is running. Say the destination + lütfen and you're moving.",
+  "items": [
+   {
+    "tr": "Nereye?",
+    "en": "“where to?” (what the driver asks you)",
+    "say": "NEH-reh-yeh",
+    "parts": "nere-ye = where-TO (-e/-ye = to)"
+   },
+   {
+    "tr": "[Taksim]'e lütfen",
+    "en": "to [Taksim], please",
+    "say": "tahk-SEE-meh LEWT-fen",
+    "note": "place name + -e/-a = “to” — [Otel]e lütfen works everywhere",
+    "parts": "Taksim-E = Taksim-TO — glue -e/-a onto any place name and you have “to X”"
+   },
+   {
+    "tr": "havalimanı",
+    "en": "airport",
+    "say": "hah-vah-lee-mah-NUH",
+    "parts": "hava = air — the SAME word as Bengali হাওয়া (haowa)! · liman = harbour → \"air-port\""
+   },
+   {
+    "tr": "otel",
+    "en": "hotel",
+    "say": "oh-TEL"
+   },
+   {
+    "tr": "sağ / sol",
+    "en": "right / left",
+    "say": "saa / sohl",
+    "mn": "Sergeant SAĞ salutes with his RIGHT arm · the pianist plays the SOLo with the LEFT hand"
+   },
+   {
+    "tr": "düz",
+    "en": "straight ahead",
+    "say": "dewz",
+    "note": "düz gidin = go straight",
+    "mn": "you DOZE off and the car keeps going STRAIGHT"
+   },
+   {
+    "tr": "Burada durun, lütfen",
+    "en": "stop here, please",
+    "say": "boo-RAH-dah doo-ROON",
+    "parts": "bura-da = here-AT · durun = stop!",
+    "mn": "“DO RUN?” — NO! duRUN means STOP"
+   },
+   {
+    "tr": "Ne kadar sürer?",
+    "en": "how long does it take?",
+    "say": "neh kah-DAR sew-RER",
+    "parts": "ne kadar = what amount · sür-er = lasts → “what amount lasts?”"
+   },
+   {
+    "tr": "uzak / yakın",
+    "en": "far / near",
+    "say": "oo-ZAHK / yah-KUHN",
+    "mn": "the USA is uzak — FAR away · a YAK IN your room is yakın — very NEAR"
+   },
+   {
+    "tr": "metro / otobüs / tramvay",
+    "en": "metro / bus / tram",
+    "say": "met-ROH / oh-toh-BEWS / trahm-VIGH",
+    "note": "in Istanbul buy an İstanbulkart — one card for all of them"
+   },
+   {
+    "tr": "durak",
+    "en": "(bus/tram) stop",
+    "say": "doo-RAHK",
+    "parts": "dur = stop (same root as durun!) · -ak = place-of → “stopping-place”"
+   },
+   {
+    "tr": "Taksimetre açık mı?",
+    "en": "is the meter on?",
+    "say": "tahk-see-MET-reh ah-CHUHK muh",
+    "parts": "açık = open/on · mı? → “meter open?”"
+   }
+  ]
+ },
+ {
+  "id": "hotel",
+  "ico": "🏨",
+  "title": "Hotel",
+  "min": 12,
+  "intro": "Check-in to check-out in ten phrases. “Rezervasyonum var” uses the magic word var (there is) — module 9 makes it click.",
+  "items": [
+   {
+    "tr": "Rezervasyonum var",
+    "en": "I have a reservation",
+    "say": "reh-zer-vahs-YOH-noom VAR",
+    "parts": "rezervasyon-um = reservation-MY · var = exists → “my-reservation exists” — no verb “to have” needed!"
+   },
+   {
+    "tr": "oda",
+    "en": "room",
+    "say": "oh-DAH",
+    "mn": "a room with an ODAur — open the window"
+   },
+   {
+    "tr": "anahtar",
+    "en": "key",
+    "say": "ah-nah-TAR",
+    "mn": "AN OTTER guards your room key"
+   },
+   {
+    "tr": "Kahvaltı saat kaçta?",
+    "en": "what time is breakfast?",
+    "say": "kah-vahl-TUH saht kach-TAH",
+    "parts": "kahvaltı = breakfast (kahve-altı, “coffee-base”) · saat = hour (Arabic ساعة!) · kaç-ta = how-many-AT"
+   },
+   {
+    "tr": "Wi-Fi şifresi ne?",
+    "en": "what's the Wi-Fi password?",
+    "say": "wifi shif-reh-SEE neh",
+    "parts": "şifre — Arabic صفر (zero), the same root that gave English “cipher” · -si = its · ne = what"
+   },
+   {
+    "tr": "Çıkış saat kaçta?",
+    "en": "what time is checkout?",
+    "say": "chuh-KUHSH saht kach-TAH",
+    "parts": "çık-ış = going-out → exit/checkout",
+    "mn": "at checkout they CHUCK-USH out"
+   },
+   {
+    "tr": "klima",
+    "en": "air conditioning",
+    "say": "KLEE-mah"
+   },
+   {
+    "tr": "asansör",
+    "en": "elevator",
+    "say": "ah-sahn-SUR"
+   },
+   {
+    "tr": "Fatura, lütfen",
+    "en": "the invoice, please (checkout — expenses!)",
+    "say": "fah-too-RAH LEWT-fen"
+   },
+   {
+    "tr": "Saat kaç?",
+    "en": "what time is it?",
+    "say": "saht KACH",
+    "note": "saat kaç = what time IS it; saat kaçta = AT what time",
+    "parts": "saat kaç = “hours how-many?” — ساعة again"
+   }
+  ]
+ },
+ {
+  "id": "food",
+  "ico": "🍢",
+  "title": "Eating & tea culture",
+  "min": 15,
+  "intro": "Food is half the trip. Rule one: when offered çay, accept it — refusing tea is refusing friendship. Rule two: you'll hear “Afiyet olsun” at every meal.",
+  "items": [
+   {
+    "tr": "Afiyet olsun",
+    "en": "bon appétit (said to you — reply: teşekkürler)",
+    "say": "ah-fee-YET ol-SOON",
+    "parts": "afiyet = good health (Arabic عافية) · olsun = may-it-be → “may it be health”"
+   },
+   {
+    "tr": "Elinize sağlık",
+    "en": "“health to your hands” — compliment the cook",
+    "say": "eh-lee-nee-ZEH saa-LUHK",
+    "note": "say this after a good meal and watch the smile",
+    "parts": "el = hand · -inize = to-your · sağlık = health → “health to your hands”"
+   },
+   {
+    "tr": "menü",
+    "en": "menu",
+    "say": "meh-NEW"
+   },
+   {
+    "tr": "su / maden suyu",
+    "en": "water / sparkling water",
+    "say": "soo / mah-DEN soo-yoo",
+    "parts": "maden = mineral (Arabic معدن) · suyu = its-water",
+    "mn": "SUe spills the SU (water)"
+   },
+   {
+    "tr": "çay",
+    "en": "tea (the national drink)",
+    "say": "chai",
+    "note": "served in tulip glasses, no milk, endless refills",
+    "mn": "the same word as Bengali চা — chai from Dhaka to Istanbul"
+   },
+   {
+    "tr": "kahve / Türk kahvesi",
+    "en": "coffee / Turkish coffee",
+    "say": "kah-VEH / tewrk kah-veh-SEE",
+    "parts": "kahve = Arabic قهوة — coffee reached Europe through Istanbul"
+   },
+   {
+    "tr": "Bir çay, lütfen",
+    "en": "one tea, please",
+    "say": "beer chai LEWT-fen"
+   },
+   {
+    "tr": "et / tavuk / balık",
+    "en": "meat / chicken / fish",
+    "say": "et / tah-VOOK / bah-LUHK",
+    "mn": "you ATE meat (et) · chicken tossed in TA-WOK · the cat LICKS the bah-LIK (fish)"
+   },
+   {
+    "tr": "acı",
+    "en": "spicy",
+    "say": "ah-JUH",
+    "note": "acısız = not spicy (-sız/-siz = without)",
+    "mn": "“AH! JEEZ!” — too spicy!"
+   },
+   {
+    "tr": "şekersiz",
+    "en": "without sugar",
+    "say": "sheh-ker-SEEZ",
+    "note": "-siz works everywhere: etsiz = meatless, buzsuz = no ice",
+    "parts": "şeker = sugar (Arabic سكر) · -siz = without — works on anything: etsiz, buzsuz"
+   },
+   {
+    "tr": "Alerjim var",
+    "en": "I have an allergy",
+    "say": "ah-ler-ZHEEM var",
+    "note": "fıstık alerjim var = I have a nut allergy",
+    "parts": "alerji-m = allergy-MY · var = exists"
+   },
+   {
+    "tr": "Çok lezzetli",
+    "en": "very delicious",
+    "say": "chok lez-zet-LEE",
+    "parts": "çok = very · lezzet = taste (Arabic لذة)",
+    "mn": "“LET'S EAT, LEE — it's delicious!”"
+   },
+   {
+    "tr": "kahvaltı",
+    "en": "breakfast (a Turkish institution)",
+    "say": "kah-vahl-TUH"
+   },
+   {
+    "tr": "Şerefe!",
+    "en": "cheers!",
+    "say": "sheh-reh-FEH",
+    "parts": "şeref = honour (Arabic شرف) · -e = to → “to honour!”"
+   }
+  ]
+ },
+ {
+  "id": "work",
+  "ico": "💼",
+  "title": "Business small talk & etiquette",
+  "min": 15,
+  "intro": "Address people as FirstName + Bey (men) or Hanım (women): Ahmet Bey, Ayşe Hanım — using it instantly marks you as someone who did their homework. Meetings start with tea and small talk; let your host set the pace.",
+  "items": [
+   {
+    "tr": "Nasılsınız?",
+    "en": "how are you? (formal)",
+    "say": "nah-suhl-suh-NUHZ",
+    "parts": "nasıl = how · -sınız = you-are → “how-you-are?”",
+    "mn": "they answer NASALly: “fine, thags”"
+   },
+   {
+    "tr": "İyiyim, teşekkürler. Siz?",
+    "en": "I'm fine, thanks. And you?",
+    "say": "ee-YEE-yim teh-shek-kewr-LER. seez",
+    "parts": "iyi-yim = good-I-am · siz? = you?"
+   },
+   {
+    "tr": "Ahmet Bey / Ayşe Hanım",
+    "en": "Mr Ahmet / Ms Ayşe (first name + title!)",
+    "say": "bey / hah-NUHM",
+    "note": "never surname + Bey — it's always the FIRST name",
+    "mn": "BEY like the Ottoman BEYs · Hanım ≈ “HONey-ma'am”"
+   },
+   {
+    "tr": "toplantı",
+    "en": "meeting",
+    "say": "top-lahn-TUH",
+    "parts": "topla = gather · -ntı = thing-of → “a gathering”"
+   },
+   {
+    "tr": "bugün / yarın / şimdi",
+    "en": "today / tomorrow / now",
+    "say": "boo-GEWN / YAH-ruhn / SHIM-dee",
+    "parts": "bu-gün = THIS-day = today",
+    "mn": "a ball of YARN for tomorrow's knitting · SHIMmy-dee — dance NOW"
+   },
+   {
+    "tr": "Saat kaçta?",
+    "en": "at what time?",
+    "say": "saht kach-TAH"
+   },
+   {
+    "tr": "İyi çalışmalar",
+    "en": "“good work!” (leaving an office or shop)",
+    "say": "ee chah-luhsh-mah-LAR",
+    "note": "say it when leaving any workplace — universally appreciated",
+    "parts": "iyi = good · çalış-ma-lar = work-ing-s → “good workings!”"
+   },
+   {
+    "tr": "Kolay gelsin",
+    "en": "“may it come easy” — to anyone working",
+    "say": "koh-LIGH GEL-sin",
+    "note": "the golden phrase: say it to taxi drivers, cleaners, clerks…",
+    "parts": "kolay = easy · gelsin = may-it-come",
+    "mn": "a KOALA with hair GEL, totally relaxed — “may it come easy”"
+   },
+   {
+    "tr": "İnşallah",
+    "en": "hopefully / God willing",
+    "say": "in-shal-LAH",
+    "note": "used constantly in Turkish, same as Arabic",
+    "mn": "the same inshallah you use in Arabic and Bangla every day"
+   },
+   {
+    "tr": "Maşallah",
+    "en": "“wonderful!” (admiration)",
+    "say": "mah-shal-LAH",
+    "mn": "same as Arabic/Bangla mashallah — already yours"
+   },
+   {
+    "tr": "Elbette",
+    "en": "of course",
+    "say": "el-BET-teh",
+    "parts": "from Arabic البتة",
+    "mn": "“you can EL-BET on it” — of course"
+   },
+   {
+    "tr": "Çok memnun oldum",
+    "en": "it was a great pleasure (leaving)",
+    "say": "chok mem-NOON ol-DOOM"
+   }
+  ]
+ },
+ {
+  "id": "magic",
+  "ico": "🪄",
+  "title": "5 magic patterns",
+  "min": 11,
+  "intro": "Turkish grammar for travelers in five moves. No gender, no articles, no verb tables — these patterns + pointing at things = functional Turkish.",
+  "items": [
+   {
+    "tr": "var / yok",
+    "en": "there is / there isn't (the most useful pair in Turkish)",
+    "say": "var / yohk",
+    "note": "Çay var mı? — Var. / Yok.  Also possession: Rezervasyonum var.",
+    "mn": "the VAR check confirms: the goal EXISTS · no YOLK left in the fridge — there ISN'T any"
+   },
+   {
+    "tr": "… mı? / mi?",
+    "en": "turns anything into a question",
+    "say": "muh / mee",
+    "note": "Taksi mi? = is this a taxi? Açık mı? = is it open?"
+   },
+   {
+    "tr": "[X] istiyorum",
+    "en": "I want [X] — point at anything and say it",
+    "say": "is-tee-YOH-room",
+    "note": "Su istiyorum. Bunu istiyorum = I want this one.",
+    "parts": "iste = want · -iyor = -ing · -um = I → “want-ing-I”",
+    "mn": "“I STEAL YOUR RUM!” — I want it"
+   },
+   {
+    "tr": "İstemiyorum",
+    "en": "I don't want (it)",
+    "say": "IS-teh-mee-yoh-room",
+    "note": "polite firm no to street sellers",
+    "parts": "iste-Mİ-yorum — the tiny -mi- inside flips it to NOT"
+   },
+   {
+    "tr": "[X] nerede?",
+    "en": "where is [X]?",
+    "say": "NEH-reh-deh"
+   },
+   {
+    "tr": "-de / -da",
+    "en": "in / at: otelde = at the hotel",
+    "say": "oteldeh",
+    "note": "havalimanında = at the airport"
+   },
+   {
+    "tr": "-siz / -sız",
+    "en": "without: şekersiz, etsiz, buzsuz",
+    "say": "-seez",
+    "note": "your allergy/diet insurance"
+   },
+   {
+    "tr": "bu / şu",
+    "en": "this / that (point and win)",
+    "say": "boo / shoo",
+    "note": "Bu ne? = what's this? Bunu istiyorum = I want this one.",
+    "mn": "BOO! — this ghost right here · SHOO! — that fly over there"
+   }
+  ]
+ }
+];
+
+/* Mock conversation: your first day compressed — taxi, check-in, café.
+   Built almost entirely from course words; every line has audio (two voices). */
+const WHO = { you: "🧳 You", d: "🚕 Driver", r: "🛎 Reception", w: "☕ Waiter" };
+const CONVO = [
+ {
+  "who": "d",
+  "tr": "Hoş geldiniz! Nereye?",
+  "en": "Welcome! Where to?",
+  "say": "hosh GEL-di-niz — NEH-reh-yeh",
+  "parts": "nere-ye = where-TO"
+ },
+ {
+  "who": "you",
+  "tr": "Merhaba! Hilton Oteli'ne, lütfen.",
+  "en": "Hello! To the Hilton hotel, please.",
+  "say": "mer-hah-BAH — hilton oh-teh-lee-NEH",
+  "parts": "Oteli-NE = hotel-TO — the -e/-ne “to” glued on"
+ },
+ {
+  "who": "d",
+  "tr": "Tamam, buyurun.",
+  "en": "OK, hop in.",
+  "say": "tah-MAHM, BOO-yoo-roon"
+ },
+ {
+  "who": "you",
+  "tr": "Ne kadar sürer?",
+  "en": "How long does it take?",
+  "say": "neh kah-DAR sew-RER"
+ },
+ {
+  "who": "d",
+  "tr": "Yirmi dakika.",
+  "en": "Twenty minutes.",
+  "say": "yeer-MEE dah-KEE-kah",
+  "parts": "dakika = minute — Arabic دقيقة"
+ },
+ {
+  "who": "you",
+  "tr": "Taksimetre açık mı?",
+  "en": "Is the meter on?",
+  "say": "tahk-see-MET-reh ah-CHUHK muh",
+  "parts": "açık = open/on · mı? = the question particle"
+ },
+ {
+  "who": "d",
+  "tr": "Evet, evet. Açık.",
+  "en": "Yes, yes. It's on.",
+  "say": "eh-VET — ah-CHUHK"
+ },
+ {
+  "who": "you",
+  "tr": "Burada, lütfen. Ne kadar?",
+  "en": "Here, please. How much?",
+  "say": "boo-RAH-dah — neh kah-DAR"
+ },
+ {
+  "who": "d",
+  "tr": "İki yüz lira.",
+  "en": "Two hundred lira.",
+  "say": "ee-KEE yewz LEE-rah",
+  "parts": "iki yüz = two-hundred — numbers simply stack"
+ },
+ {
+  "who": "you",
+  "tr": "Buyurun. Fiş alabilir miyim?",
+  "en": "Here you are. Can I get a receipt?",
+  "say": "BOO-yoo-roon — feesh ah-lah-bee-LEER mee-yim",
+  "parts": "al-abilir mi-yim = take-CAN ?-I"
+ },
+ {
+  "who": "r",
+  "tr": "Hoş geldiniz! Buyurun?",
+  "en": "Welcome! How can I help?",
+  "say": "hosh GEL-di-niz — BOO-yoo-roon"
+ },
+ {
+  "who": "you",
+  "tr": "Merhaba. Rezervasyonum var.",
+  "en": "Hello. I have a reservation.",
+  "say": "reh-zer-vahs-YOH-noom VAR",
+  "parts": "rezervasyon-um VAR = my-reservation EXISTS"
+ },
+ {
+  "who": "r",
+  "tr": "Pasaport, lütfen.",
+  "en": "Passport, please.",
+  "say": "pah-sah-PORT"
+ },
+ {
+  "who": "you",
+  "tr": "Buyurun. Kahvaltı saat kaçta?",
+  "en": "Here you are. What time is breakfast?",
+  "say": "kah-vahl-TUH saht kach-TAH"
+ },
+ {
+  "who": "r",
+  "tr": "Yedide. Buyurun, anahtarınız.",
+  "en": "At seven. Here is your key.",
+  "say": "yeh-dee-DEH — ah-nah-tah-ruh-NUHZ",
+  "parts": "yedi-DE = seven-AT · anahtar-ınız = key-YOUR"
+ },
+ {
+  "who": "you",
+  "tr": "Wi-Fi şifresi ne?",
+  "en": "What's the Wi-Fi password?",
+  "say": "wifi shif-reh-SEE neh"
+ },
+ {
+  "who": "r",
+  "tr": "Bir, iki, üç, dört, beş. İyi günler!",
+  "en": "One two three four five. Good day!",
+  "say": "beer ee-KEE ewch durt besh"
+ },
+ {
+  "who": "w",
+  "tr": "Buyurun!",
+  "en": "Yes, please!",
+  "say": "BOO-yoo-roon"
+ },
+ {
+  "who": "you",
+  "tr": "Bir çay ve su istiyorum, lütfen.",
+  "en": "I want one tea and a water, please.",
+  "say": "beer CHAI veh SOO is-tee-YOH-room",
+  "parts": "ve = and (Arabic وَ!) · istiyorum = I-want"
+ },
+ {
+  "who": "w",
+  "tr": "Başka bir şey?",
+  "en": "Anything else?",
+  "say": "bahsh-KAH beer shey",
+  "parts": "başka = other · bir şey = a thing → “another thing?”"
+ },
+ {
+  "who": "you",
+  "tr": "Hayır, teşekkürler.",
+  "en": "No, thanks.",
+  "say": "HAH-yuhr teh-shek-kewr-LER"
+ },
+ {
+  "who": "you",
+  "tr": "Bakar mısınız? Hesap, lütfen.",
+  "en": "Excuse me? The bill, please.",
+  "say": "bah-KAR muh-suh-nuhz — heh-SAHP LEWT-fen"
+ },
+ {
+  "who": "w",
+  "tr": "Elli lira. Kart geçer.",
+  "en": "Fifty lira. Card works.",
+  "say": "el-LEE LEE-rah — kart geh-CHER"
+ },
+ {
+  "who": "you",
+  "tr": "Çok lezzetli. Elinize sağlık!",
+  "en": "Very delicious — health to your hands!",
+  "say": "chok lez-zet-LEE — eh-lee-nee-ZEH saa-LUHK"
+ },
+ {
+  "who": "w",
+  "tr": "Afiyet olsun! Güle güle!",
+  "en": "Enjoy! Goodbye!",
+  "say": "ah-fee-YET ol-SOON — gew-LEH gew-LEH"
+ },
+ {
+  "who": "you",
+  "tr": "İyi günler!",
+  "en": "Good day!",
+  "say": "ee GEWN-ler"
+ }
 ];
 
 /* ---------- storage ---------- */
@@ -243,6 +1025,10 @@ function allItems(onlyDone) {
     if (onlyDone && !doneMods()[m.id]) return;
     m.items.forEach((it, i) => out.push({ key: m.id + ":" + i, mod: m, it }));
   });
+  // your lines from the conversation join the refresh/final pool once played
+  if (!onlyDone || doneMods().conv) {
+    CONVO.forEach((l, i) => { if (l.who === "you") out.push({ key: "conv:" + i, mod: { id: "conv", ico: "🎭", title: "The conversation" }, it: l }); });
+  }
   return out;
 }
 
@@ -290,6 +1076,8 @@ function render() {
   if (h === "review") return review();
   if (h === "final") return finalCheck();
   if (h === "all") return cheatSheet();
+  if (h === "conv") return convView(false);
+  if (h === "conv-play") return convView(true);
   const [kind, id] = h.split("/");
   const m = MODULES.find(x => x.id === id);
   if (kind === "m" && m) return study(m);
@@ -327,6 +1115,12 @@ function home() {
         <span><span class="t">${i + 1}. ${m.title}</span><br><span class="m">${m.items.length} items · ${m.min} min</span></span>
         ${dm[m.id] ? `<span class="done">✓</span>` : `<span class="togo">${m.min} min</span>`}
       </a>`).join("")}
+    <a class="mod" href="#conv" style="border-color:var(--red)">
+      <span class="ico">🎭</span>
+      <span><span class="t">The conversation — your first day, played out</span><br>
+      <span class="m">taxi → check-in → café · ${CONVO.length} lines, two voices · then play your role</span></span>
+      ${dm.conv ? `<span class="done">✓</span>` : `<span class="togo">12 min</span>`}
+    </a>
     <div class="card" style="margin-top:14px">
       <div class="top"><h2>🔁 10-minute refresh</h2>${nDone ? "" : `<span class="tag">unlocks after your first module</span>`}</div>
       <p class="sub" style="margin:0 0 8px">Re-tests what you've learnt, misses first. Do it once a day until the trip, once on the plane, and once in the hotel — that's the whole maintenance plan.</p>
@@ -334,8 +1128,10 @@ function home() {
     </div>
     <a class="mod" href="#all"><span class="ico">📋</span><span><span class="t">Cheat sheet</span><br>
       <span class="m">every phrase in one searchable table — for use in Turkey</span></span></a>
-    <p class="sub" style="margin-top:16px">💡 Tip: open this page once while online and it installs itself — including all 🔊 audio (recorded native Turkish speech) — for full offline use. "Add to Home Screen" makes it an app. Tap any row in a test to hear the answer.</p>
+    <p class="sub" id="offStatus" style="margin-top:16px"></p>
+    <p class="sub">💡 "Add to Home Screen" makes this an app. Tap any row in a test to hear the answer spoken.</p>
   `;
+  updateOffStatus();
 }
 
 /* ---------- study ---------- */
@@ -354,7 +1150,7 @@ function study(m) {
       ${m.items.map((it, ii) => `<tr data-i="${ii}">
         <td class="tr-cell">${it.tr} ${spkBtn(m.id + ":" + ii)}</td>
         <td class="say">${it.say || ""}</td>
-        <td class="en-cell">${it.en}${it.note ? `<span class="note">${it.note}</span>` : ""}</td>
+        <td class="en-cell">${it.en}${it.note ? `<span class="note">${it.note}</span>` : ""}${it.parts ? `<span class="parts">🧩 ${it.parts}</span>` : ""}${it.mn ? `<span class="mn">💡 ${it.mn}</span>` : ""}</td>
       </tr>`).join("")}
       </tbody></table>
       <div class="exrow">
@@ -391,7 +1187,7 @@ function test(m) {
       <table><tbody id="tb">
       ${order.map(i => { const it = m.items[i]; return `<tr data-i="${i}">
         <td class="en-cell" style="width:45%">${it.en}</td>
-        <td class="veiled"><span><span class="tr-cell" style="font-size:16.5px">${it.tr}</span> <span class="say">${it.say || ""}</span></span></td>
+        <td class="veiled"><span><span class="tr-cell" style="font-size:16.5px">${it.tr}</span> <span class="say">${it.say || ""}</span>${it.mn ? `<span class="mn">💡 ${it.mn}</span>` : ""}</span></td>
         <td style="width:60px"><button class="small rowbtn">✗</button></td>
       </tr>`; }).join("")}
       </tbody></table>
@@ -419,15 +1215,19 @@ function test(m) {
     m.items.forEach((it, i) => markCard(m.id + ":" + i, missed.has(m.id + ":" + i)));
     const dm = doneMods(); dm[m.id] = true; store.set("tk-done", dm);
     const next = MODULES.find(x => !doneMods()[x.id]);
+    const missPairs = m.items.map((it, i) => ({ key: m.id + ":" + i, it })).filter(p => missed.has(p.key));
     app.innerHTML = `
       <div class="card" style="text-align:center;padding:30px 16px">
         <div class="big">✓ ${m.title} done${missed.size ? ` — ${missed.size} to revisit` : " — perfect!"}</div>
-        <p class="sub" style="margin:8px 0 16px">${missed.size ? "Your misses come back first in every refresh." : "Çok güzel! (very nice)"}</p>
+        <p class="sub" style="margin:8px 0 16px">${missed.size ? "Hammer them now, or let the refresh catch them later — your call." : "Çok güzel! (very nice)"}</p>
         <div class="exrow" style="justify-content:center">
-          ${next ? `<a href="#m/${next.id}"><button class="primary">▶ Next: ${next.title} (${next.min} min)</button></a>` : `<a href="#final"><button class="primary">🎓 Final check</button></a>`}
+          ${missPairs.length ? `<button class="primary" id="drillNow">🎯 Drill my ${missPairs.length} miss${missPairs.length > 1 ? "es" : ""} until clean</button>` : ""}
+          ${next ? `<a href="#m/${next.id}"><button ${missPairs.length ? "" : 'class="primary"'}>▶ Next: ${next.title} (${next.min} min)</button></a>` : `<a href="#final"><button ${missPairs.length ? "" : 'class="primary"'}>🎓 Final check</button></a>`}
           <a href="#home"><button>Home</button></a>
         </div>
       </div>`;
+    const dn = document.getElementById("drillNow");
+    if (dn) dn.onclick = () => drillLoop(missPairs);
   };
 }
 
@@ -449,7 +1249,7 @@ function review() {
       <table><tbody id="tb">
       ${queue.map((x, qi) => `<tr data-k="${x.key}" data-q="${qi}">
         <td class="en-cell" style="width:45%">${x.it.en}${x.miss ? ` <span class="tag" style="color:var(--red)">missed ×${x.miss}</span>` : ""}</td>
-        <td class="veiled"><span><span class="tr-cell" style="font-size:16.5px">${x.it.tr}</span> <span class="say">${x.it.say || ""}</span></span></td>
+        <td class="veiled"><span><span class="tr-cell" style="font-size:16.5px">${x.it.tr}</span> <span class="say">${x.it.say || ""}</span>${x.it.mn ? `<span class="mn">💡 ${x.it.mn}</span>` : ""}</span></td>
         <td style="width:60px"><button class="small rowbtn">✗</button></td>
       </tr>`).join("")}
       </tbody></table>
@@ -476,12 +1276,18 @@ function review() {
   document.getElementById("finish").onclick = () => {
     queue.forEach(x => markCard(x.key, missed.has(x.key)));
     const meta = store.get("tk-meta", {}); meta.lastRefresh = new Date().toDateString(); store.set("tk-meta", meta);
+    const missPairs = queue.filter(x => missed.has(x.key)).map(x => ({ key: x.key, it: x.it }));
     app.innerHTML = `
       <div class="card" style="text-align:center;padding:30px 16px">
         <div class="big">🔁 Refresh done — ${queue.length - missed.size}/${queue.length}</div>
-        <p class="sub" style="margin:8px 0 16px">${missed.size ? missed.size + " misses will lead the next refresh." : "Nothing missed. Hazırsın — you're ready."}</p>
-        <div class="exrow" style="justify-content:center"><a href="#home"><button class="primary">Home</button></a></div>
+        <p class="sub" style="margin:8px 0 16px">${missed.size ? "Now hammer just the misses until none are left." : "Nothing missed. Hazırsın — you're ready."}</p>
+        <div class="exrow" style="justify-content:center">
+          ${missPairs.length ? `<button class="primary" id="drillNow">🎯 Drill my ${missPairs.length} miss${missPairs.length > 1 ? "es" : ""} until clean</button>` : ""}
+          <a href="#home"><button ${missPairs.length ? "" : 'class="primary"'}>Home</button></a>
+        </div>
       </div>`;
+    const dn = document.getElementById("drillNow");
+    if (dn) dn.onclick = () => drillLoop(missPairs);
   };
 }
 
@@ -560,7 +1366,7 @@ function cheatSheet() {
     ).map(({ m, it, key }) => `<tr>
       <td class="tr-cell" style="font-size:16.5px">${it.tr} ${spkBtn(key)}</td>
       <td><span class="say">${it.say || ""}</span></td>
-      <td class="en-cell">${it.en}${it.note ? `<span class="note">${it.note}</span>` : ""}<span class="note">${m.ico} ${m.title}</span></td>
+      <td class="en-cell">${it.en}${it.note ? `<span class="note">${it.note}</span>` : ""}${it.parts ? `<span class="parts">🧩 ${it.parts}</span>` : ""}${it.mn ? `<span class="mn">💡 ${it.mn}</span>` : ""}<span class="note">${m.ico} ${m.title}</span></td>
     </tr>`).join("") || `<tr><td colspan="3" style="color:var(--muted)">nothing matches</td></tr>`;
     wireSpk(tb, k => trOf[k]);
   }
@@ -568,8 +1374,184 @@ function cheatSheet() {
   document.getElementById("q").oninput = e => draw(e.target.value);
 }
 
-/* ---------- offline ---------- */
+/* ---------- drill the misses: repeat until the pile is empty ----------
+   Same reveal-and-mark table (never flashcards) over ONLY the missed items,
+   round after round, until nothing is marked. Every round feeds the SRS:
+   a clean pass lowers an item's miss weight, a miss raises it — so what you
+   clear here still comes back in a later refresh at a spaced interval. */
+function drillLoop(pairs, round) {
+  round = round || 1;
+  const order = pairs.map((x, i) => i).sort(() => 0.5 - Math.random());
+  app.innerHTML = `
+    <div class="top"><a class="crumb" href="#home">← Home</a><span class="tag">miss drill · round ${round} · ${pairs.length} left</span></div>
+    <h1>🎯 Only your misses</h1>
+    <p class="sub">Say it out loud, tap to check (it plays), mark only what you still miss. Repeats until the pile is empty — mnemonics show on reveal to re-anchor.</p>
+    <div class="card">
+      <table><tbody id="tb">
+      ${order.map(i => { const it = pairs[i].it; return `<tr data-i="${i}">
+        <td class="en-cell" style="width:45%">${it.en}</td>
+        <td class="veiled"><span><span class="tr-cell" style="font-size:16.5px">${it.tr}</span> <span class="say">${it.say || ""}</span>${it.mn ? `<span class="mn">💡 ${it.mn}</span>` : ""}${it.parts ? `<span class="parts">🧩 ${it.parts}</span>` : ""}</span></td>
+        <td style="width:60px"><button class="small rowbtn">✗</button></td>
+      </tr>`; }).join("")}
+      </tbody></table>
+      <div class="exrow">
+        <button class="small" id="revealAll">👁 Reveal all</button>
+        <button class="primary" id="finish">✓ Round done</button>
+      </div>
+    </div>
+  `;
+  const tb = document.getElementById("tb");
+  const missed = new Set();
+  tb.querySelectorAll("tr").forEach(tr => {
+    const veil = tr.querySelector(".veiled");
+    const i = +tr.dataset.i;
+    tr.onclick = () => { veil.classList.remove("veiled"); playKey(pairs[i].key, pairs[i].it.tr); };
+    tr.querySelector(".rowbtn").onclick = (e) => {
+      e.stopPropagation(); veil.classList.remove("veiled");
+      const b = e.target;
+      if (missed.has(i)) { missed.delete(i); b.classList.remove("on"); b.textContent = "✗"; }
+      else { missed.add(i); b.classList.add("on"); b.textContent = "✗ missed"; }
+    };
+  });
+  document.getElementById("revealAll").onclick = () => tb.querySelectorAll(".veiled").forEach(v => v.classList.remove("veiled"));
+  document.getElementById("finish").onclick = () => {
+    pairs.forEach((p, i) => markCard(p.key, missed.has(i)));
+    const still = pairs.filter((p, i) => missed.has(i));
+    if (still.length) return drillLoop(still, round + 1);
+    app.innerHTML = `
+      <div class="card" style="text-align:center;padding:30px 16px">
+        <div class="big">🎯 Miss pile empty — cleared in ${round} round${round > 1 ? "s" : ""}</div>
+        <p class="sub" style="margin:8px 0 16px">They'll resurface in a later refresh at a spaced interval, to prove they actually stuck.</p>
+        <div class="exrow" style="justify-content:center"><a href="#home"><button class="primary">Home</button></a></div>
+      </div>`;
+  };
+}
+
+/* ---------- the conversation ---------- */
+function convView(practice) {
+  trackConvDone = false;
+  const missed = new Set();
+  app.innerHTML = `
+    <div class="top"><a class="crumb" href="#home">← Home</a><span class="tag">${CONVO.length} lines · ≈12 min</span></div>
+    <h1>🎭 The conversation</h1>
+    <p class="sub">${practice
+      ? "Now it's real: the locals speak, YOUR lines are hidden. Say each of your lines out loud from memory, then tap to check (it plays too). Mark ✗ only real misses."
+      : "Your first day, compressed: airport taxi → hotel check-in → café. Listen through once, read the word-by-word breakdowns, then play your role."}</p>
+    <div class="card">
+      <div class="exrow" style="margin:0 0 8px">
+        <button id="playScene">▶ Play the whole scene</button>
+        <button class="small" id="stopScene">■</button>
+        ${practice ? "" : `<a href="#conv-play" style="margin-left:auto"><button class="primary">🎭 Play your role →</button></a>`}
+      </div>
+      <div id="lines"></div>
+      ${practice ? `<div class="exrow"><button class="primary" id="convFinish">✓ Done — I only missed the marked ones</button></div>` : ""}
+    </div>
+  `;
+  const lines = document.getElementById("lines");
+  CONVO.forEach((l, i) => {
+    const you = l.who === "you";
+    const div = document.createElement("div");
+    div.className = "cline" + (you ? " you" : "");
+    div.id = "cl-" + i;
+    const body = `
+      <span class="tr-cell" style="font-size:17px">${l.tr}</span> <button class="small spk" data-key="conv:${i}">🔊</button>
+      <span class="say">${l.say}</span>
+      <span class="note" style="color:var(--ink)">${l.en}</span>
+      ${l.parts ? `<span class="parts">🧩 ${l.parts}</span>` : ""}`;
+    if (practice && you) {
+      div.innerHTML = `<span class="who">${WHO[l.who]}</span>
+        <div class="veiled" style="padding:4px 8px"><span>${body}</span></div>
+        <button class="small rowbtn" style="margin-top:6px">✗</button>`;
+      const veil = div.querySelector(".veiled");
+      veil.onclick = () => { veil.classList.remove("veiled"); playKey("conv:" + i, l.tr); };
+      div.querySelector(".rowbtn").onclick = (e) => {
+        e.stopPropagation(); veil.classList.remove("veiled");
+        const b = e.target;
+        if (missed.has(i)) { missed.delete(i); b.classList.remove("on"); b.textContent = "✗"; }
+        else { missed.add(i); b.classList.add("on"); b.textContent = "✗ missed"; }
+      };
+    } else {
+      div.innerHTML = `<span class="who">${WHO[l.who]}</span><div>${body}</div>`;
+    }
+    lines.appendChild(div);
+  });
+  wireSpk(lines, k => CONVO[+k.split(":")[1]].tr);
+  document.getElementById("playScene").onclick = () => {
+    let i = 0;
+    const next = () => {
+      if (i >= CONVO.length) { CONVO.forEach((_, x) => document.getElementById("cl-" + x).style.outline = ""); return; }
+      CONVO.forEach((_, x) => document.getElementById("cl-" + x).style.outline = x === i ? "2px solid var(--red)" : "");
+      document.getElementById("cl-" + i).scrollIntoView({ block: "center", behavior: "smooth" });
+      const cur = i; i++;
+      playKey("conv:" + cur, CONVO[cur].tr, () => setTimeout(next, 450));
+    };
+    next();
+  };
+  document.getElementById("stopScene").onclick = () => { stopAudio(); CONVO.forEach((_, x) => document.getElementById("cl-" + x).style.outline = ""); };
+  const fin = document.getElementById("convFinish");
+  if (fin) fin.onclick = () => {
+    CONVO.forEach((l, i) => { if (l.who === "you") markCard("conv:" + i, missed.has(i)); });
+    const dm = doneMods(); dm.conv = true; store.set("tk-done", dm);
+    const missPairs = CONVO.map((l, i) => ({ key: "conv:" + i, it: l, i })).filter(p => missed.has(p.i));
+    app.innerHTML = `
+      <div class="card" style="text-align:center;padding:30px 16px">
+        <div class="big">🎭 Scene complete${missed.size ? ` — ${missed.size} line${missed.size > 1 ? "s" : ""} to revisit` : " — word-perfect!"}</div>
+        <p class="sub" style="margin:8px 0 16px">Your lines now cycle through the 10-minute refresh. Replay the scene any time — hearing it again is free listening practice.</p>
+        <div class="exrow" style="justify-content:center">
+          ${missPairs.length ? `<button class="primary" id="drillNow">🎯 Drill my ${missPairs.length} missed line${missPairs.length > 1 ? "s" : ""} until clean</button>` : ""}
+          <a href="#conv"><button>▶ Replay the scene</button></a>
+          <a href="#home"><button ${missPairs.length ? "" : 'class="primary"'}>Home</button></a>
+        </div>
+      </div>`;
+    const dn = document.getElementById("drillNow");
+    if (dn) dn.onclick = () => drillLoop(missPairs);
+  };
+}
+let trackConvDone = false;
+
+/* ---------- offline: auto-download EVERYTHING on every visit ----------
+   The SW precaches on install, but this belt-and-braces pass runs on every
+   open/refresh: it checks each file (pages + all audio) is in the cache and
+   fetches whatever is missing (the SW's fetch handler stores it). The home
+   screen shows an honest count, so "offline-ready" is verified, not hoped. */
+const OFF = { checked: 0, total: 0, failed: 0, done: false };
+function offlineFileList() {
+  const files = ["index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
+  MODULES.forEach(m => m.items.forEach((_, i) => files.push(`audio/${m.id}-${i}.mp3`)));
+  CONVO.forEach((_, i) => files.push(`audio/conv-${i}.mp3`));
+  return files;
+}
+function updateOffStatus() {
+  const el = document.getElementById("offStatus");
+  if (!el || !OFF.total) return;
+  el.innerHTML = OFF.done
+    ? (OFF.failed === 0
+      ? `<span style="color:var(--green);font-weight:600">✅ Fully downloaded — all ${OFF.total} files (course + every audio clip) are stored on this device. Plane mode works.</span>`
+      : `<span style="color:var(--amber);font-weight:600">⚠️ ${OFF.total - OFF.failed}/${OFF.total} files stored — ${OFF.failed} still need a connection. Refresh once while online to finish.</span>`)
+    : `⬇️ Downloading for offline use… ${OFF.checked}/${OFF.total}`;
+}
+async function ensureOffline() {
+  if (!("caches" in window)) return;
+  try { await (navigator.serviceWorker && navigator.serviceWorker.ready); } catch (e) {}
+  const files = offlineFileList();
+  OFF.total = files.length; OFF.checked = 0; OFF.failed = 0; OFF.done = false;
+  for (const f of files) {
+    try {
+      const hit = await caches.match(new URL(f, location.href).href, { ignoreSearch: true });
+      if (!hit) {
+        const r = await fetch(f); // the service worker caches every OK response
+        if (!r.ok) OFF.failed++;
+      }
+    } catch (e) { OFF.failed++; }
+    OFF.checked++;
+    if (OFF.checked % 10 === 0) updateOffStatus();
+  }
+  OFF.done = true;
+  updateOffStatus();
+}
+
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+ensureOffline();
 
 render();
 </script>
